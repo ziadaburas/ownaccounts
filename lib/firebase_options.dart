@@ -29,7 +29,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD1YsS6Xh1nO5V2hIfkJJH_pyLTL-iI1t0',
-    appId: '1:326847435666:android:f27535f38a1310f541a74b',
+    appId: '1:326847435666:android:0771c587faab05e741a74b',
     messagingSenderId: '326847435666',
     projectId: 'own7xledger',
     storageBucket: 'own7xledger.firebasestorage.app',

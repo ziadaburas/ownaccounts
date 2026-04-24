@@ -246,8 +246,7 @@ class ExcelService {
 
       // نتحقق من أن الملف له الأعمدة الأساسية (التاريخ، الاتجاه، المبلغ)
       bool hasDate = headers.any((h) => h.contains('التاريخ'));
-      bool hasDirection =
-          headers.any((h) => h.contains('الاتجاه') || h.contains('له') || h.contains('عليه'));
+      headers.any((h) => h.contains('الاتجاه') || h.contains('له') || h.contains('عليه'));
       bool hasAmount = headers.any((h) => h.contains('المبلغ'));
 
       if (!hasDate || !hasAmount) {

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../theme/app_theme.dart';
-import '../../controllers/add_entry_controller.dart';
-import '../../models/entry_model.dart';
+import '../theme/app_theme.dart';
+import '../controllers/add_entry_controller.dart';
+import '../models/entry_model.dart';
 
+// ignore: must_be_immutable
 class AddEntryView extends StatelessWidget {
   final EntryModel? editEntry;
   final String? presetCustomerName;

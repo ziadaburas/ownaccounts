@@ -3,8 +3,7 @@ import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import 'entries_controller.dart';
 import 'sync_controller.dart';
-import '../views/login/login_view.dart';
-import 'package:get/get.dart';
+import '../views/login_view.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = AuthService();

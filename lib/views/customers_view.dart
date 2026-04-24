@@ -2,11 +2,12 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../controllers/entries_controller.dart';
-import '../../models/entry_model.dart';
-import '../../theme/app_theme.dart';
-import '../customer_entries/customer_entries_view.dart';
+import '../controllers/entries_controller.dart';
+import '../models/entry_model.dart';
+import '../theme/app_theme.dart';
+import 'customer_entries_view.dart';
 
+// ignore: must_be_immutable
 class CustomersView extends StatelessWidget {
    CustomersView({super.key});
    var isDark = false;

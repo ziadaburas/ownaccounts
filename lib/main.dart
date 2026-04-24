@@ -6,7 +6,7 @@ import 'bindings/app_bindings.dart';
 import 'controllers/theme_controller.dart';
 import 'services/database_service.dart';
 import 'theme/app_theme.dart';
-import 'views/splash/splash_view.dart';
+import 'views/splash_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,21 +18,19 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize theme controller early
-  final themeController = Get.put(ThemeController(), permanent: true);
 
-  runApp(const OwnAccountsApp());
+  runApp(const Hisabati());
 }
 
-class OwnAccountsApp extends StatelessWidget {
-  const OwnAccountsApp({super.key});
+class Hisabati extends StatelessWidget {
+  const Hisabati({super.key});
 
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
 
     return Obx(() => GetMaterialApp(
-      title: 'OwnAccounts',
+      title: 'حساباتي',
       debugShowCheckedModeBanner: false,
       initialBinding: AppBindings(),
       theme: AppTheme.lightTheme,

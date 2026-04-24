@@ -127,10 +127,13 @@ class AddEntryController extends GetxController {
         builder: (context, child) {
           return Theme(
             data: Theme.of(context).copyWith(
-              colorScheme: const ColorScheme.light(
-                primary: Color(0xFF1565C0),
-                onPrimary: Colors.white,
-              ),
+              colorScheme: isDark? const ColorScheme.dark(
+              primary:AppColors.primaryLight,
+              onPrimary: AppColors.white,
+            ):const ColorScheme.light(
+              primary:AppColors.primaryLight,
+              onPrimary: Colors.white,
+            ),
             ),
             child: child!,
           );

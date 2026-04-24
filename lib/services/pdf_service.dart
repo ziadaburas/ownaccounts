@@ -4,7 +4,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:intl/intl.dart';
 import '../models/entry_model.dart';
-
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 class PdfService {
 
   /// تنظيف النص من الأحرف المخفية التي تسبب خطأ في PDF
@@ -34,11 +34,19 @@ class PdfService {
     
     final ttf = pw.Font.ttf(fontData);
     final ttfBold = pw.Font.ttf(fontDataBold);
-    final ByteData imageBytes = await rootBundle.load('assets/accounts_logo_light.png');
+    final ByteData imageBytes = await rootBundle.load('assets/hisabati_logo_light.png');
     final Uint8List imageData = imageBytes.buffer.asUint8List();
 
-    // 2. تحويل البيانات إلى صورة تفهمها مكتبة الـ PDF
-    final pw.MemoryImage pdfImage = pw.MemoryImage(imageData);
+    Uint8List compressedImageData = await FlutterImageCompress.compressWithList(
+    imageData,
+    minWidth: 500,  
+    minHeight: 500, 
+    quality: 70,    
+    format: CompressFormat.jpeg,
+  );
+
+  // 3. تمرير الصورة "المضغوطة" لمكتبة الـ PDF
+  final pw.MemoryImage pdfImage = pw.MemoryImage(compressedImageData);
     // التاريخ مع الوقت
     final dateFormatter = DateFormat('dd/MM/yyyy HH:mm');
     final amountFormatter = NumberFormat('#,##0');
@@ -119,51 +127,51 @@ class PdfService {
 
           /// الجدول مع تلوين الصفوف
           pw.Table(
-            border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-            columnWidths: {
-              0: const pw.FixedColumnWidth(25),
-              1: const pw.FlexColumnWidth(2.0),
-              2: const pw.FlexColumnWidth(1.8),
-              3: const pw.FlexColumnWidth(1.4),
-              4: const pw.FlexColumnWidth(1.8),
-              5: const pw.FlexColumnWidth(2.2),
-            },
-            children: [
-              // رأس الجدول
-              pw.TableRow(
-                decoration: const pw.BoxDecoration(color: PdfColors.blue800),
-                children: [
-                  _buildHeaderCell('#', ttfBold),
-                  _buildHeaderCell('التاريخ', ttfBold),
-                  _buildHeaderCell('العميل', ttfBold),
-                  _buildHeaderCell('النوع', ttfBold),
-                  _buildHeaderCell('المبلغ', ttfBold),
-                  _buildHeaderCell('ملاحظة', ttfBold),
-                ],
-              ),
-              // صفوف البيانات
-              ...List.generate(entries.length, (i) {
-                final e = entries[i];
-                final isOdd = i % 2 == 0;
-                final bgColor = isOdd ? PdfColors.grey100 : PdfColors.white;
-                final typeColor = e.isCredit ? PdfColors.green800 : PdfColors.red800;
-                final typeText = e.isCredit ? 'لي' : 'عليّا';
-                final amountText = '${e.isCredit ? '+' : '-'}${amountFormatter.format(e.amount)}';
+  border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+  columnWidths: {
+    0: const pw.FlexColumnWidth(2.2), // ملاحظة
+    1: const pw.FlexColumnWidth(1.8), // المبلغ
+    2: const pw.FlexColumnWidth(1.4), // النوع
+    3: const pw.FlexColumnWidth(1.8), // العميل
+    4: const pw.FlexColumnWidth(2.0), // التاريخ
+    5: const pw.FixedColumnWidth(25), // #
+  },
+  children: [
+    // رأس الجدول
+    pw.TableRow(
+      decoration: const pw.BoxDecoration(color: PdfColors.blue800),
+      children: [
+        _buildHeaderCell('ملاحظة', ttfBold),
+        _buildHeaderCell('المبلغ', ttfBold),
+        _buildHeaderCell('النوع', ttfBold),
+        _buildHeaderCell('العميل', ttfBold),
+        _buildHeaderCell('التاريخ', ttfBold),
+        _buildHeaderCell('#', ttfBold),
+      ],
+    ),
+    // صفوف البيانات
+    ...List.generate(entries.length, (i) {
+      final e = entries[i];
+      final isOdd = i % 2 == 0;
+      final bgColor = isOdd ? PdfColors.grey100 : PdfColors.white;
+      final typeColor = e.isCredit ? PdfColors.green800 : PdfColors.red800;
+      final typeText = e.isCredit ? 'لي' : 'عليّا';
+      final amountText = '${e.isCredit ? '+' : '-'}${amountFormatter.format(e.amount)}';
 
-                return pw.TableRow(
-                  decoration: pw.BoxDecoration(color: bgColor),
-                  children: [
-                    _buildDataCell('${i + 1}', ttf, PdfColors.grey700),
-                    _buildDataCell(dateFormatter.format(e.date), ttf, PdfColors.grey800),
-                    _buildDataCell(e.customerName.isEmpty ? '-' : cleanText(e.customerName), ttf, PdfColors.grey800),
-                    _buildDataCell(typeText, ttfBold, typeColor),
-                    _buildDataCell(amountText, ttfBold, typeColor),
-                    _buildDataCell(e.note.isEmpty ? '-' : cleanText(e.note), ttf, PdfColors.grey700),
-                  ],
-                );
-              }),
-            ],
-          ),
+      return pw.TableRow(
+        decoration: pw.BoxDecoration(color: bgColor),
+        children: [
+          _buildDataCell(e.note.isEmpty ? '-' : cleanText(e.note), ttf, PdfColors.grey700), // ملاحظة
+          _buildDataCell(amountText, ttfBold, typeColor), // المبلغ
+          _buildDataCell(typeText, ttfBold, typeColor), // النوع
+          _buildDataCell(e.customerName.isEmpty ? '-' : cleanText(e.customerName), ttf, PdfColors.grey800), // العميل
+          _buildDataCell(dateFormatter.format(e.date), ttf, PdfColors.grey800), // التاريخ
+          _buildDataCell('${i + 1}', ttf, PdfColors.grey700), // #
+        ],
+      );
+    }),
+  ],
+),
 
           pw.SizedBox(height: 20),
 
@@ -335,7 +343,7 @@ class PdfService {
         children: [
 
           pw.Text(
-            'تم الإنشاء بواسطة OwnAccounts',
+            'تم الإنشاء بواسطة تطبيق حساباتي',
             style: const pw.TextStyle(
               fontSize: 8,
               color: PdfColors.grey600,

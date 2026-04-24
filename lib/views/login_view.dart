@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '/controllers/sync_controller.dart';
-import '../../controllers/auth_controller.dart';
-import '../../theme/app_theme.dart';
-import '../home/home_view.dart';
+import '../controllers/auth_controller.dart';
+import '../theme/app_theme.dart';
+import 'home_view.dart';
 
 class LoginView extends GetView<AuthController> {
   const LoginView({super.key});
@@ -81,7 +81,7 @@ class LoginView extends GetView<AuthController> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(28),
                       child: Image.asset(
-                        'assets/accounts_logo.png',
+                        'assets/hisabati_logo.png',
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => const Icon(
                           Icons.account_balance_wallet_rounded,
@@ -93,7 +93,7 @@ class LoginView extends GetView<AuthController> {
                   ),
                   const SizedBox(height: 22),
                   const Text(
-                    'OwnAccounts',
+                    'حساباتي',
                     style: TextStyle(
                       fontSize: 34,
                       fontWeight: FontWeight.bold,

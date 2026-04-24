@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../models/entry_model.dart';
 
 class GoogleDriveService {
-  static const String _fileName = 'ownaccounts_data.json';
+  static const String _fileName = 'hisabati_data.json';
   static const String _appDataFolder = 'appDataFolder';
 
   String? _accessToken;
@@ -76,7 +76,7 @@ class GoogleDriveService {
         return response.statusCode == 200;
       } else {
         // Create new file with multipart upload
-        final boundary = 'ownaccounts_boundary';
+        const boundary = 'hisabati_boundary';
         final metadata = jsonEncode({
           'name': _fileName,
           'parents': [_appDataFolder],

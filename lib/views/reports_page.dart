@@ -2,9 +2,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../controllers/reports_controller.dart';
-import '../../controllers/entries_controller.dart';
-import '../../theme/app_theme.dart';
+import '../controllers/reports_controller.dart';
+import '../controllers/entries_controller.dart';
+import '../theme/app_theme.dart';
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
@@ -261,7 +261,7 @@ class ReportsPage extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _buildPreviewStat(
-                                    'لي (دائن)',
+                                    'لي ',
                                     amountFormatter.format(credit),
                                     AppColors.success,
                                     Icons.arrow_upward_rounded,
@@ -274,7 +274,7 @@ class ReportsPage extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: _buildPreviewStat(
-                                    'علي (مدين)',
+                                    'عليا',
                                     amountFormatter.format(debit),
                                     AppColors.error,
                                     Icons.arrow_downward_rounded,
@@ -387,7 +387,10 @@ class ReportsPage extends StatelessWidget {
     final isSelected = controller.reportType.value == type;
 
     return GestureDetector(
-      onTap: () => controller.reportType.value = type,
+      onTap: () {
+        controller.resetFilters();
+        controller.reportType.value = type;
+         },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         margin: const EdgeInsets.only(bottom: 8),
@@ -480,11 +483,15 @@ class ReportsPage extends StatelessWidget {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
+          
           isExpanded: true,
           dropdownColor: isDark ? AppColors.darkCard : null,
           hint: Text(
+
             'اختر العميل',
+            
             style: TextStyle(
+              
                 color: isDark ? AppColors.darkTextSecondary : AppColors.textSubtitle,
                 fontFamily: 'myfont'),
           ),
@@ -498,7 +505,10 @@ class ReportsPage extends StatelessWidget {
             fontSize: 14,
           ),
           items: customers
-              .map((name) => DropdownMenuItem(value: name, child: Text(name)))
+              .map((name) => DropdownMenuItem(
+                value: name, 
+                alignment: Alignment.centerRight,
+                child: Text(name,)))
               .toList(),
           onChanged: (value) {
             if (value != null) controller.selectedCustomer.value = value;

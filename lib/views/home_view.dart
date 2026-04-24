@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../controllers/auth_controller.dart';
-import '../../controllers/entries_controller.dart';
-import '../../controllers/home_controller.dart';
-import '../../controllers/sync_controller.dart';
-import '../../theme/app_theme.dart';
-import '../../widgets/app_drawer.dart';
-import '../../widgets/sync_status_bar.dart';
-import '../add_entry/add_entry_view.dart';
-import '../entries/entries_view.dart';
-import '../customers/customers_view.dart';
+import '../controllers/auth_controller.dart';
+import '../controllers/entries_controller.dart';
+import '../controllers/home_controller.dart';
+import '../controllers/sync_controller.dart';
+import '../theme/app_theme.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/sync_status_bar.dart';
+import 'add_entry_view.dart';
+import 'entries_view.dart';
+import 'customers_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -229,7 +229,7 @@ class HomeView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildBalanceItem(
-                        'لي (دائن)',
+                        'لي ',
                         entriesController.totalCredit,
                         AppColors.primaryLight,
                         Icons.arrow_upward_rounded,
@@ -238,7 +238,7 @@ class HomeView extends StatelessWidget {
                     Container(width: 1, height: 42, color: Colors.white.withOpacity(0.2)),
                     Expanded(
                       child: _buildBalanceItem(
-                        'علي (مدين)',
+                        'عليا',
                         entriesController.totalDebit,
                         const Color(0xFFFF8A80),
                         Icons.arrow_downward_rounded,

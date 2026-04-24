@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:printing/printing.dart';
-import '../../controllers/auth_controller.dart';
-import '../../controllers/entries_controller.dart';
-import '../../models/entry_model.dart';
-import '../../services/pdf_service.dart';
-import '../../theme/app_theme.dart';
-import '../add_entry/add_entry_view.dart';
+import '../controllers/auth_controller.dart';
+import '../controllers/entries_controller.dart';
+import '../models/entry_model.dart';
+import '../services/pdf_service.dart';
+import '../theme/app_theme.dart';
+import 'add_entry_view.dart';
 
 class CustomerEntriesView extends StatelessWidget {
   final String customerName;
@@ -228,7 +228,7 @@ class CustomerEntriesView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: _buildBalanceItem(
-                        'لي (دائن)',
+                        'لي ',
                         totalCredit,
                         AppColors.primaryLight,
                         Icons.arrow_upward_rounded,
@@ -238,7 +238,7 @@ class CustomerEntriesView extends StatelessWidget {
                     Container(width: 1, height: 42, color: Colors.white.withOpacity(0.2)),
                     Expanded(
                       child: _buildBalanceItem(
-                        'علي (مدين)',
+                        'عليا',
                         totalDebit,
                         const Color(0xFFFF8A80),
                         Icons.arrow_downward_rounded,
@@ -325,7 +325,7 @@ class CustomerEntriesView extends StatelessWidget {
 
       await Printing.sharePdf(
         bytes: pdfBytes,
-        filename: 'OwnAccounts_${customerName}_Report.pdf',
+        filename: 'حساباتي_${customerName}_${DateTime.now()}.pdf',
       );
     } catch (e) {
       Get.snackbar(

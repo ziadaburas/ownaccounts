@@ -1,12 +1,12 @@
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/auth_controller.dart';
-import '../../controllers/entries_controller.dart';
-import '../../controllers/sync_controller.dart';
-import '../../controllers/theme_controller.dart';
-import '../../services/database_service.dart';
-import '../../theme/app_theme.dart';
+import '../controllers/auth_controller.dart';
+import '../controllers/entries_controller.dart';
+import '../controllers/sync_controller.dart';
+import '../controllers/theme_controller.dart';
+import '../services/database_service.dart';
+import '../theme/app_theme.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
@@ -311,7 +311,7 @@ class SettingsView extends StatelessWidget {
                     // App version
                     Center(
                       child: Text(
-                        'OwnAccounts - الإصدار 1.0.0',
+                        'حساباتي - الإصدار 1.0.0',
                         style: TextStyle(
                           fontSize: 12,
                           color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,

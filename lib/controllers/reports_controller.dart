@@ -153,7 +153,7 @@ class ReportsController extends GetxController {
 
       await Printing.layoutPdf(
         onLayout: (format) => pdfBytes,
-        name: 'OwnAccounts_Report',
+        name: 'تقرير_حساباتي',
       );
     } catch (e) {
       Get.snackbar(

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
 import '../theme/app_theme.dart';
-import '../views/reports/reports_page.dart';
-import '../views/import_export/import_export_page.dart';
-import '../views/settings/settings_view.dart';
+import '../views/reports_page.dart';
+import '../views/import_export_page.dart';
+import '../views/settings_view.dart';
 
 class AppDrawer extends StatelessWidget {
   final int currentIndex;
@@ -150,7 +150,7 @@ class AppDrawer extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
-                    'assets/accounts_logo.png',
+                    'assets/hisabati_logo_light.png',
                     width: 52,
                     height: 52,
                     fit: BoxFit.cover,
@@ -167,7 +167,7 @@ class AppDrawer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'OwnAccounts',
+                    'حساباتي',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

@@ -2,12 +2,13 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../controllers/auth_controller.dart';
-import '../../controllers/entries_controller.dart';
-import '../../models/entry_model.dart';
-import '../../theme/app_theme.dart';
-import '../add_entry/add_entry_view.dart';
+import '../controllers/auth_controller.dart';
+import '../controllers/entries_controller.dart';
+import '../models/entry_model.dart';
+import '../theme/app_theme.dart';
+import 'add_entry_view.dart';
 
+// ignore: must_be_immutable
 class EntriesView extends StatelessWidget {
    EntriesView({super.key});
   var isDark = false;
