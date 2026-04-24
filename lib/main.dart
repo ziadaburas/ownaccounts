@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'bindings/app_bindings.dart';
 import 'services/database_service.dart';
+import 'theme/app_theme.dart';
 import 'views/splash/splash_view.dart';
 
 void main() async {
@@ -28,31 +29,7 @@ class OwnAccountsApp extends StatelessWidget {
       title: 'OwnAccounts',
       debugShowCheckedModeBanner: false,
       initialBinding: AppBindings(),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1565C0),
-          brightness: Brightness.light,
-        ),
-        fontFamily: 'myfont',
-        useMaterial3: true,
-        cardTheme: CardTheme(
-          elevation: 1,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        appBarTheme: const AppBarTheme(
-          centerTitle: false,
-          elevation: 0,
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-      ),
-      // نبدأ دائماً بـ SplashView التي تتحقق من حالة تسجيل الدخول
+      theme: AppTheme.lightTheme,
       home: const SplashView(),
     );
   }

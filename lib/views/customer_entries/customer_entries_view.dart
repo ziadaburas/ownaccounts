@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/entries_controller.dart';
 import '../../models/entry_model.dart';
+import '../../theme/app_theme.dart';
 import '../add_entry/add_entry_view.dart';
 
 class CustomerEntriesView extends StatelessWidget {
@@ -22,9 +23,9 @@ class CustomerEntriesView extends StatelessWidget {
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: const Color(0xFF1565C0),
+          backgroundColor: AppColors.primaryMedium,
           foregroundColor: Colors.white,
           elevation: 0,
           title: Row(
@@ -75,7 +76,7 @@ class CustomerEntriesView extends StatelessWidget {
               // Summary Header
               Container(
                 width: double.infinity,
-                color: const Color(0xFF1565C0),
+                color: AppColors.primaryMedium,
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -91,7 +92,7 @@ class CustomerEntriesView extends StatelessWidget {
                           _buildSummaryItem(
                             'لي',
                             amountFormatter.format(totalCredit),
-                            const Color(0xFF4CAF50),
+                            AppColors.success,
                           ),
                           Container(
                             width: 1,
@@ -101,7 +102,7 @@ class CustomerEntriesView extends StatelessWidget {
                           _buildSummaryItem(
                             'عليا',
                             amountFormatter.format(totalDebit),
-                            const Color(0xFFEF5350),
+                            AppColors.error,
                           ),
                         ],
                       ),
@@ -222,7 +223,7 @@ class CustomerEntriesView extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () => Get.to(
               () => AddEntryView(presetCustomerName: customerName)),
-          backgroundColor: const Color(0xFF1565C0),
+          backgroundColor: AppColors.primaryMedium,
           foregroundColor: Colors.white,
           child: const Icon(Icons.add_rounded),
         ),
@@ -275,8 +276,8 @@ class CustomerEntriesView extends StatelessWidget {
             border: Border(
               right: BorderSide(
                 color: entry.isCredit
-                    ? const Color(0xFF4CAF50)
-                    : const Color(0xFFEF5350),
+                    ? AppColors.success
+                    : AppColors.error,
                 width: 4,
               ),
             ),
@@ -288,8 +289,8 @@ class CustomerEntriesView extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   color: entry.isCredit
-                      ? const Color(0xFF4CAF50).withOpacity( 0.1)
-                      : const Color(0xFFEF5350).withOpacity( 0.1),
+                      ? AppColors.success.withOpacity( 0.1)
+                      : AppColors.error.withOpacity( 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -297,8 +298,8 @@ class CustomerEntriesView extends StatelessWidget {
                       ? Icons.arrow_upward_rounded
                       : Icons.arrow_downward_rounded,
                   color: entry.isCredit
-                      ? const Color(0xFF4CAF50)
-                      : const Color(0xFFEF5350),
+                      ? AppColors.success
+                      : AppColors.error,
                   size: 22,
                 ),
               ),
@@ -316,8 +317,8 @@ class CustomerEntriesView extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                             color: entry.isCredit
-                                ? const Color(0xFF4CAF50)
-                                : const Color(0xFFEF5350),
+                                ? AppColors.success
+                                : AppColors.error,
                           ),
                         ),
                         Text(
@@ -326,8 +327,8 @@ class CustomerEntriesView extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             color: entry.isCredit
-                                ? const Color(0xFF4CAF50)
-                                : const Color(0xFFEF5350),
+                                ? AppColors.success
+                                : AppColors.error,
                           ),
                         ),
                       ],
@@ -395,7 +396,7 @@ class CustomerEntriesView extends StatelessWidget {
       textCancel: 'إلغاء',
       confirmTextColor: Colors.white,
       buttonColor: Colors.red,
-      cancelTextColor: const Color(0xFF1565C0),
+      cancelTextColor: AppColors.primaryMedium,
       onConfirm: () {
         final userId = authController.user.value?.uid;
         if (userId != null) {

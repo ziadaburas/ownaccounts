@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/sync_controller.dart';
 import '../controllers/auth_controller.dart';
 import '../services/sync_service.dart';
+import '../theme/app_theme.dart';
 
 class SyncStatusBar extends GetView<SyncController> {
   const SyncStatusBar({super.key});
@@ -14,7 +15,6 @@ class SyncStatusBar extends GetView<SyncController> {
       final message = controller.syncMessage.value;
       final pending = controller.pendingChanges.value;
 
-      // إخفاء الشريط عند المزامنة الكاملة وعدم وجود رسالة
       if (state == SyncState.synced && message.isEmpty) {
         return const SizedBox.shrink();
       }
@@ -25,25 +25,25 @@ class SyncStatusBar extends GetView<SyncController> {
 
       switch (state) {
         case SyncState.synced:
-          bgColor = const Color(0xFF4CAF50);
+          bgColor = AppColors.success;
           icon = Icons.cloud_done_rounded;
           break;
         case SyncState.syncing:
-          bgColor = const Color(0xFF1565C0);
+          bgColor = AppColors.primaryMedium;
           icon = Icons.sync_rounded;
           break;
         case SyncState.pending:
-          bgColor = const Color(0xFFFFA726);
+          bgColor = const Color(0xFFD97706);
           icon = Icons.cloud_upload_rounded;
           showSyncButton = !controller.isSyncing.value;
           break;
         case SyncState.error:
-          bgColor = const Color(0xFFEF5350);
+          bgColor = AppColors.error;
           icon = Icons.cloud_off_rounded;
           showSyncButton = !controller.isSyncing.value;
           break;
         case SyncState.offline:
-          bgColor = const Color(0xFF78909C);
+          bgColor = AppColors.mediumGray;
           icon = Icons.wifi_off_rounded;
           break;
       }
@@ -57,15 +57,15 @@ class SyncStatusBar extends GetView<SyncController> {
           children: [
             if (state == SyncState.syncing)
               const SizedBox(
-                width: 16,
-                height: 16,
+                width: 14,
+                height: 14,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
               )
             else
-              Icon(icon, color: Colors.white, size: 16),
+              Icon(icon, color: Colors.white, size: 15),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -74,14 +74,14 @@ class SyncStatusBar extends GetView<SyncController> {
                   color: Colors.white,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
+                  fontFamily: 'myfont',
                 ),
               ),
             ),
             if (showSyncButton)
               GestureDetector(
                 onTap: () {
-                  final userId =
-                      Get.find<AuthController>().user.value?.uid;
+                  final userId = Get.find<AuthController>().user.value?.uid;
                   if (userId != null) {
                     final authController = Get.find<AuthController>();
                     authController.refreshToken().then((_) {
@@ -90,11 +90,10 @@ class SyncStatusBar extends GetView<SyncController> {
                   }
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.25),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Text(
                     'مزامنة الآن',
@@ -102,6 +101,7 @@ class SyncStatusBar extends GetView<SyncController> {
                       color: Colors.white,
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'myfont',
                     ),
                   ),
                 ),
@@ -115,7 +115,7 @@ class SyncStatusBar extends GetView<SyncController> {
   String _defaultMessage(SyncState state, int pending) {
     switch (state) {
       case SyncState.synced:
-        return 'تمت المزامنة';
+        return 'تمت المزامنة بنجاح';
       case SyncState.syncing:
         return 'جاري المزامنة...';
       case SyncState.pending:

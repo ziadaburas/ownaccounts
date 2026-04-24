@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/auth_controller.dart';
+import '../../theme/app_theme.dart';
 import '../home/home_view.dart';
 import '../login/login_view.dart';
 
@@ -42,25 +43,19 @@ class _SplashViewState extends State<SplashView>
     );
 
     _animController.forward();
-
     _checkAuthAndNavigate();
   }
 
   Future<void> _checkAuthAndNavigate() async {
     final authController = Get.find<AuthController>();
-
-    // 1. انتظر حتى ينتهي الأنيميشن (مثلاً ثانية واحدة)
     await Future.delayed(const Duration(milliseconds: 100));
 
-    // 2. ✅ انتظر "ذكياً" حتى ينتهي AuthController من فحص Firebase
-    // سنستخدم ever أو simple loop للانتظار
     while (!authController.isInitialCheckDone.value) {
       await Future.delayed(const Duration(milliseconds: 100));
     }
 
     if (!mounted) return;
 
-    // 3. الآن اتخذ القرار وأنت متأكد من النتيجة
     if (authController.isLoggedIn) {
       Get.off(() => const HomeView(), transition: Transition.fadeIn);
       Future.delayed(const Duration(milliseconds: 1), () {
@@ -87,110 +82,154 @@ class _SplashViewState extends State<SplashView>
           height: double.infinity,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
               colors: [
-                Color(0xFF0D47A1),
-                Color(0xFF1565C0),
-                Color(0xFF1976D2),
+                AppColors.primaryMedium,
+                AppColors.primaryDark,
+                Color(0xFF072218),
               ],
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Stack(
             children: [
-              // Logo + App Name
-              AnimatedBuilder(
-                animation: _animController,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _fadeAnim.value,
-                    child: Transform.scale(
-                      scale: _scaleAnim.value,
-                      child: child,
-                    ),
-                  );
-                },
-                child: Column(
-                  children: [
-                    // App Icon
-                    Container(
-                      width: 110,
-                      height: 110,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.25),
-                            blurRadius: 30,
-                            spreadRadius: 5,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.account_balance_wallet_rounded,
-                        size: 64,
-                        color: Color(0xFF1565C0),
-                      ),
-                    ),
-                    const SizedBox(height: 28),
-                    // App Title
-                    const Text(
-                      'حساباتي',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                        fontFamily: 'myfont',
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'إدارة قيودك المالية بسهولة',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
+              // Background decorative circles
+              Positioned(
+                top: -60,
+                left: -60,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.04),
+                  ),
                 ),
               ),
-              const SizedBox(height: 80),
-              // Loading indicator
-              AnimatedBuilder(
-                animation: _animController,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _fadeAnim.value,
-                    child: child,
-                  );
-                },
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white.withOpacity(0.9),
-                        ),
-                        strokeWidth: 3,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'جاري التحميل...',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
+              Positioned(
+                bottom: -80,
+                right: -50,
+                child: Container(
+                  width: 280,
+                  height: 280,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.04),
+                  ),
                 ),
+              ),
+              // Main content
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 3),
+                  // Logo + Name
+                  AnimatedBuilder(
+                    animation: _animController,
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: _fadeAnim.value,
+                        child: Transform.scale(
+                          scale: _scaleAnim.value,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        // Logo Container
+                        Container(
+                          width: 110,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(28),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                blurRadius: 30,
+                                spreadRadius: 5,
+                                offset: const Offset(0, 10),
+                              ),
+                              BoxShadow(
+                                color: AppColors.primaryLight.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(26),
+                            child: Image.asset(
+                              'assets/accounts_logo.png',
+                              width: 110,
+                              height: 110,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.account_balance_wallet_rounded,
+                                size: 64,
+                                color: AppColors.primaryDark,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        // App Name
+                        const Text(
+                          'OwnAccounts',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 34,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                            fontFamily: 'myfont',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'إدارة حساباتك بسهولة',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.75),
+                            fontSize: 16,
+                            fontFamily: 'myfont',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(flex: 3),
+                  // Loading indicator
+                  AnimatedBuilder(
+                    animation: _animController,
+                    builder: (context, child) {
+                      return Opacity(opacity: _fadeAnim.value, child: child);
+                    },
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white.withOpacity(0.8),
+                            ),
+                            strokeWidth: 2.5,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          'جاري التحميل...',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: 13,
+                            fontFamily: 'myfont',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
               ),
             ],
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '/controllers/sync_controller.dart';
 import '../../controllers/auth_controller.dart';
+import '../../theme/app_theme.dart';
 import '../home/home_view.dart';
 
 class LoginView extends GetView<AuthController> {
@@ -12,142 +13,202 @@ class LoginView extends GetView<AuthController> {
     return Scaffold(
       body: Container(
         width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
             colors: [
-              Color(0xFF1565C0),
-              Color(0xFF0D47A1),
-              Color(0xFF0A2E6B),
+              AppColors.primaryMedium,
+              AppColors.primaryDark,
+              Color(0xFF072218),
             ],
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              const Spacer(flex: 2),
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity( 0.15),
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(
-                    color: Colors.white.withOpacity( 0.3),
-                    width: 2,
+              // Decorative circles
+              Positioned(
+                top: -40,
+                right: -40,
+                child: Container(
+                  width: 180,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.04),
                   ),
                 ),
-                child: const Icon(
-                  Icons.account_balance_wallet_rounded,
-                  size: 64,
-                  color: Colors.white,
+              ),
+              Positioned(
+                bottom: -60,
+                left: -40,
+                child: Container(
+                  width: 240,
+                  height: 240,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withOpacity(0.04),
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
-              const Text(
-                'OwnAccounts',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'إدارة حساباتك بسهولة',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white.withOpacity( 0.8),
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const Spacer(flex: 2),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Column(
-                  children: [
-                    _buildFeatureRow(
-                      Icons.receipt_long_rounded,
-                      'تتبع جميع قيودك المالية',
+              // Main Content
+              Column(
+                children: [
+                  const Spacer(flex: 2),
+                  // Logo
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 25,
+                          spreadRadius: 3,
+                          offset: const Offset(0, 10),
+                        ),
+                        BoxShadow(
+                          color: AppColors.primaryLight.withOpacity(0.25),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    _buildFeatureRow(
-                      Icons.people_rounded,
-                      'إدارة حسابات العملاء',
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureRow(
-                      Icons.cloud_sync_rounded,
-                      'مزامنة على Google Drive',
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureRow(
-                      Icons.picture_as_pdf_rounded,
-                      'تقارير PDF احترافية',
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(flex: 2),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Obx(() {
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: controller.isSigningIn.value
-                          ? null
-                          : () => _handleSignIn(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF1565C0),
-                        elevation: 8,
-                        shadowColor: Colors.black.withOpacity( 0.3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(28),
+                      child: Image.asset(
+                        'assets/accounts_logo.png',
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.account_balance_wallet_rounded,
+                          size: 64,
+                          color: AppColors.primaryDark,
                         ),
                       ),
-                      child: controller.isSigningIn.value
-                          ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF1565C0),
-                                ),
-                              ),
-                            )
-                          : const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.g_mobiledata, size: 28),
-                                SizedBox(width: 12),
-                                Text(
-                                  'تسجيل الدخول بحساب Google',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
                     ),
-                  );
-                }),
+                  ),
+                  const SizedBox(height: 22),
+                  const Text(
+                    'OwnAccounts',
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                      fontFamily: 'myfont',
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'إدارة حساباتك بسهولة',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.white.withOpacity(0.75),
+                      fontFamily: 'myfont',
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  // Features
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 36),
+                    child: Column(
+                      children: [
+                        _buildFeatureRow(Icons.receipt_long_rounded, 'تتبع جميع قيودك المالية'),
+                        const SizedBox(height: 14),
+                        _buildFeatureRow(Icons.people_rounded, 'إدارة حسابات العملاء'),
+                        const SizedBox(height: 14),
+                        _buildFeatureRow(Icons.cloud_sync_rounded, 'مزامنة تلقائية على السحابة'),
+                        const SizedBox(height: 14),
+                        _buildFeatureRow(Icons.picture_as_pdf_rounded, 'تقارير PDF احترافية'),
+                      ],
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  // Sign In Button
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 36),
+                    child: Obx(() {
+                      return Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 15,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: ElevatedButton(
+                          onPressed: controller.isSigningIn.value
+                              ? null
+                              : () => _handleSignIn(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: AppColors.primaryDark,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: controller.isSigningIn.value
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: AppColors.primaryDark,
+                                  ),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 28,
+                                      height: 28,
+                                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                                      child: const Icon(Icons.g_mobiledata, size: 28),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    const Text(
+                                      'تسجيل الدخول بحساب Google',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'myfont',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.shield_outlined, color: Colors.white54, size: 14),
+                      const SizedBox(width: 6),
+                      Text(
+                        'بياناتك آمنة ومحمية',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.55),
+                          fontFamily: 'myfont',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                'بياناتك محفوظة في Google Drive الخاص بك',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white.withOpacity( 0.6),
-                ),
-              ),
-              const Spacer(),
             ],
           ),
         ),
@@ -162,49 +223,51 @@ class LoginView extends GetView<AuthController> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity( 0.15),
+            color: Colors.white.withOpacity(0.12),
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
-          child: Icon(icon, color: Colors.white, size: 22),
+          child: Icon(icon, color: AppColors.primaryLight, size: 20),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 14),
         Expanded(
           child: Text(
             text,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: FontWeight.w400,
+              fontFamily: 'myfont',
             ),
           ),
         ),
+        Icon(Icons.check_circle_rounded,
+            color: AppColors.primaryLight.withOpacity(0.6), size: 16),
       ],
     );
   }
 
   Future<void> _handleSignIn() async {
     final success = await controller.signInWithGoogle();
-    
+
     if (success) {
-      // ✅ تمت إضافة كود الانتقال هنا
-      // نستخدم Get.offAll لمسح شاشة تسجيل الدخول من الذاكرة حتى لا يعود إليها المستخدم عند الضغط على زر الرجوع
-      Get.offAll(() => const HomeView()); 
+      Get.offAll(() => const HomeView());
       var authController = Get.find<AuthController>();
       var syncController = Get.find<SyncController>();
-      final userId = 
-                               authController.user.value?.uid;
-                              if (userId != null) {
-                                authController.refreshToken().then((_) {
-                                  syncController.syncNow(userId);
-                                });
-                              }
+      final userId = authController.user.value?.uid;
+      if (userId != null) {
+        authController.refreshToken().then((_) {
+          syncController.syncNow(userId);
+        });
+      }
     } else if (controller.error.value.isNotEmpty) {
       Get.snackbar(
         'خطأ',
         'فشل تسجيل الدخول: ${controller.error.value}',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
         colorText: Colors.white,
+        margin: const EdgeInsets.all(12),
       );
     }
   }

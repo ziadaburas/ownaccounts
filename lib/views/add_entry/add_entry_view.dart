@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../theme/app_theme.dart';
 import '../../controllers/add_entry_controller.dart';
 import '../../models/entry_model.dart';
 
@@ -24,9 +25,9 @@ class AddEntryView extends StatelessWidget {
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: const Color(0xFF1565C0),
+          backgroundColor: AppColors.primaryMedium,
           foregroundColor: Colors.white,
           elevation: 0,
           title: Text(
@@ -40,7 +41,7 @@ class AddEntryView extends StatelessWidget {
               // Credit/Debit Toggle
               Container(
                 width: double.infinity,
-                color: const Color(0xFF1565C0),
+                color: AppColors.primaryMedium,
                 padding:
                     const EdgeInsets.only(bottom: 24, left: 16, right: 16),
                 child: Obx(() => Container(
@@ -60,7 +61,7 @@ class AddEntryView extends StatelessWidget {
                                     const EdgeInsets.symmetric(vertical: 14),
                                 decoration: BoxDecoration(
                                   color: controller.isCredit.value
-                                      ? const Color(0xFF4CAF50)
+                                      ? AppColors.success
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -99,7 +100,7 @@ class AddEntryView extends StatelessWidget {
                                     const EdgeInsets.symmetric(vertical: 14),
                                 decoration: BoxDecoration(
                                   color: !controller.isCredit.value
-                                      ? const Color(0xFFEF5350)
+                                      ? AppColors.error
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -163,8 +164,8 @@ class AddEntryView extends StatelessWidget {
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: controller.isCredit.value
-                                        ? const Color(0xFF4CAF50)
-                                        : const Color(0xFFEF5350),
+                                        ? AppColors.success
+                                        : AppColors.error,
                                   ),
                                 ),
                               ),
@@ -276,15 +277,15 @@ Obx(() => InkWell(
                                               : 'تم إضافة القيد',
                                           snackPosition: SnackPosition.BOTTOM,
                                           backgroundColor:
-                                              const Color(0xFF4CAF50),
+                                              AppColors.success,
                                           colorText: Colors.white,
                                         );
                                       }
                                     },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: controller.isCredit.value
-                                    ? const Color(0xFF4CAF50)
-                                    : const Color(0xFFEF5350),
+                                    ? AppColors.success
+                                    : AppColors.error,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
@@ -468,7 +469,7 @@ Obx(() => InkWell(
                           controller.showCustomerSuggestions.value
                               ? Icons.keyboard_arrow_up
                               : Icons.keyboard_arrow_down,
-                          color: const Color(0xFF1565C0),
+                          color: AppColors.primaryMedium,
                         ),
                         onPressed: () {
                           // إغلاق الكيبورد عند الفتح اليدوي
@@ -546,7 +547,7 @@ Obx(() => InkWell(
                             controller.showNoteSuggestions.value
                                 ? Icons.keyboard_arrow_up
                                 : Icons.keyboard_arrow_down,
-                            color: const Color(0xFF1565C0),
+                            color: AppColors.primaryMedium,
                           ),
                           onPressed: () {
                             FocusScope.of(Get.context!).unfocus();
