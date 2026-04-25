@@ -10,8 +10,8 @@ enum ReportType { all, customer, period, customerPeriod }
 class ReportsController extends GetxController {
   final Rx<ReportType> reportType = ReportType.all.obs;
   final RxString selectedCustomer = ''.obs;
-  final Rx<DateTime?> fromDate = Rx<DateTime?>(null);
-  final Rx<DateTime?> toDate = Rx<DateTime?>(null);
+  final Rx<DateTime> fromDate = Rx<DateTime>(DateTime.now().subtract(const Duration(days: 30)));
+  final Rx<DateTime> toDate = Rx<DateTime>(DateTime.now());
   final RxBool isGenerating = false.obs;
 
 
@@ -34,23 +34,23 @@ class ReportsController extends GetxController {
     // Filter by date
     if (reportType.value == ReportType.period ||
         reportType.value == ReportType.customerPeriod) {
-      if (fromDate.value != null) {
+      
         filtered = filtered
-            .where((e) => !e.date.isBefore(fromDate.value!))
+            .where((e) => !e.date.isBefore(fromDate.value))
             .toList();
-      }
-      if (toDate.value != null) {
+      
+      
         final endOfDay = DateTime(
-          toDate.value!.year,
-          toDate.value!.month,
-          toDate.value!.day,
+          toDate.value.year,
+          toDate.value.month,
+          toDate.value.day,
           23,
           59,
           59,
         );
         filtered =
             filtered.where((e) => !e.date.isAfter(endOfDay)).toList();
-      }
+      
     }
 
     filtered.sort((a, b) => b.date.compareTo(a.date));
@@ -63,52 +63,6 @@ class ReportsController extends GetxController {
     ReportType.customerPeriod => 'عميل + فترة',
     _ => 'كل القيود',
   };
-
-  Future<void> selectFromDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: fromDate.value ?? DateTime.now().subtract(const Duration(days: 30)),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1565C0),
-              onPrimary: Colors.white,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      fromDate.value = picked;
-    }
-  }
-
-  Future<void> selectToDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: toDate.value ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF1565C0),
-              onPrimary: Colors.white,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      toDate.value = picked;
-    }
-  }
 
   Future<void> generateAndPrintPdf() async {
     isGenerating.value = true;
@@ -155,7 +109,7 @@ class ReportsController extends GetxController {
   void resetFilters() {
     reportType.value = ReportType.all;
     selectedCustomer.value = '';
-    fromDate.value = null;
-    toDate.value = null;
+    fromDate.value = DateTime.now().subtract(const Duration(days: 30));
+    toDate.value = DateTime.now();
   }
 }

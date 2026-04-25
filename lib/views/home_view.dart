@@ -7,6 +7,7 @@ import '../controllers/entries_controller.dart';
 import '../controllers/home_controller.dart';
 import '../controllers/sync_controller.dart';
 import '../theme/app_theme.dart';
+import '../widgets/app_bar.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/balance_header.dart';
 import '../widgets/sync_status_bar.dart';
@@ -22,8 +23,9 @@ class HomeView extends StatelessWidget {
     final homeController = Get.find<HomeController>();
     final authController = Get.find<AuthController>();
     final entriesController = Get.find<EntriesController>();
+    final syncController = Get.find<SyncController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    
     return WillPopScope(
       onWillPop: () async {
         final shouldExit = await _showExitConfirmDialog(context);
@@ -40,14 +42,71 @@ class HomeView extends StatelessWidget {
             currentIndex: homeController.currentTabIndex.value,
             onItemSelected: homeController.changeTab,
           ),
-          body: Column(
-            children: [
-              _buildAppBar(context, homeController, authController, entriesController),
-              const SyncStatusBar(),
-              Expanded(
-                child: _buildTabContent(homeController.currentTabIndex.value),
-              ),
-            ],
+          body: Builder(
+            builder: (ctx) {
+              return Column(
+                children: [
+                  //_buildAppBar(context, homeController, authController, entriesController),
+                  // تأكد من استدعاء الكنترولرز هنا
+              
+              Obx(() {
+              final user = authController.user.value;
+              final isSyncingData = syncController.isSyncing.value;
+              
+                return CustomAppBar(
+  // القائمة
+  onDrawerPressed: () => Scaffold.of(ctx).openDrawer(),
+  drawerIcon: Icons.menu_rounded,
+  drawerTooltip: 'افتح القائمة',
+
+  // المستخدم
+  profileWidget: user?.photoUrl.isNotEmpty == true
+      ? Image.network(user!.photoUrl, fit: BoxFit.cover)
+      : Container(
+          color: Colors.white.withOpacity(0.15),
+          alignment: Alignment.center,
+          child: Text(
+            user?.displayName.isNotEmpty == true
+                ? user!.displayName[0].toUpperCase()
+                : '?',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ),
+  welcomeText: 'مرحباً، ${user?.displayName ?? 'المستخدم'}',
+  emailText: user?.email,
+
+  // الإجراء (تم تغيير المسميات هنا لتعمل مع التعديل الجديد)
+  actionIcon: Icons.cloud_sync_rounded,
+  actionTooltip: 'مزامنة البيانات',
+  isActionLoading: isSyncingData, // بدلاً من isSyncing
+  onActionPressed: () {          // بدلاً من onSyncPressed
+    final userId = user?.uid;
+    if (userId != null) {
+      authController.refreshToken().then((_) {
+        syncController.syncNow(userId);
+      });
+    }
+  },
+
+  // الرصيد
+  balanceHeader: BalanceHeader(
+    totalCredit: entriesController.totalCredit,
+    totalDebit: entriesController.totalDebit,
+    
+  ),
+);
+              }),
+                  const SyncStatusBar(),
+                  Expanded(
+                    child: _buildTabContent(homeController.currentTabIndex.value),
+                  ),
+                ],
+              );
+            }
           ),
           bottomNavigationBar: _buildBottomNav(context, homeController),
           floatingActionButton: _buildFAB(homeController),
@@ -69,175 +128,7 @@ class HomeView extends StatelessWidget {
     }
   }
 
-  Widget _buildAppBar(
-    BuildContext context,
-    HomeController homeController,
-    AuthController authController,
-    EntriesController entriesController,
-  ) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [AppColors.primaryMedium, AppColors.primaryDark],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x330F3D2E),
-            blurRadius: 12,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(6, 6, 16, 6),
-              child: Row(
-                children: [
-                  Builder(
-                    builder: (ctx) => IconButton(
-                      onPressed: () => Scaffold.of(ctx).openDrawer(),
-                      icon: const Icon(
-                        Icons.menu_rounded,
-                        color: Colors.white,
-                        size: 26,
-                      ),
-                      tooltip: 'القائمة',
-                    ),
-                  ),
-                  Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(
-                     // color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child:  Obx(() {
-                    final user = authController.user.value;
-                    return Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.primaryLight.withOpacity(0.5),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Colors.white.withOpacity(0.15),
-                        backgroundImage: user?.photoUrl.isNotEmpty == true
-                            ? NetworkImage(user!.photoUrl)
-                            : null,
-                        child: user?.photoUrl.isEmpty != false
-                            ? Text(
-                                user?.displayName.isNotEmpty == true
-                                    ? user!.displayName[0].toUpperCase()
-                                    : '?',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  fontFamily: 'myfont',
-                                ),
-                              )
-                            : null,
-                      ),
-                    );
-                  }),
-               
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Obx(() {
-                      final user = authController.user.value;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'مرحباً، ${user?.displayName ?? 'المستخدم'}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              fontFamily: 'myfont',
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          if (user?.email != null)
-                            Text(
-                              user!.email,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.65),
-                                fontSize: 11,
-                                fontFamily: 'myfont',
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        ],
-                      );
-                    }),
-                  ),
-                  Obx(() {
-                    final syncController = Get.find<SyncController>();
-                    return IconButton(
-                      onPressed: syncController.isSyncing.value
-                          ? null
-                          : () {
-                              final userId = authController.user.value?.uid;
-                              if (userId != null) {
-                                authController.refreshToken().then((_) {
-                                  syncController.syncNow(userId);
-                                });
-                              }
-                            },
-                      icon: syncController.isSyncing.value
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Icon(Icons.cloud_sync_rounded, color: Colors.white, size: 25),
-                      tooltip: 'مزامنة',
-                    );
-                  }),
-                  ],
-              ),
-            ),
-            Obx(() => Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.1),
-                  ),
-                ),
-                child: BalanceHeader(
-                totalCredit:entriesController.totalCredit,
-                totalDebit: entriesController.totalDebit,
-              ),
-              ),
-            )),
-          ],
-        ),
-      ),
-    );
-  }
-
-  
+ 
 
   Widget _buildBottomNav(BuildContext context, HomeController homeController) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -315,7 +206,6 @@ class HomeView extends StatelessWidget {
                 color: isActive ? AppColors.primaryLight : AppColors.bottomNavInactive,
                 fontSize: 10,
                 fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                fontFamily: 'myfont',
               ),
             ),
           ],
@@ -383,7 +273,6 @@ class HomeView extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
-                  fontFamily: 'myfont',
                   color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
                 ),
               ),
@@ -393,7 +282,6 @@ class HomeView extends StatelessWidget {
             'هل تريد الخروج من التطبيق؟',
             style: TextStyle(
               fontSize: 14,
-              fontFamily: 'myfont',
               color: isDark ? AppColors.darkTextSecondary : null,
             ),
           ),
@@ -401,7 +289,7 @@ class HomeView extends StatelessWidget {
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
               child: const Text('إلغاء',
-                  style: TextStyle(color: AppColors.mediumGray, fontFamily: 'myfont')),
+                  style: TextStyle(color: AppColors.mediumGray)),
             ),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
@@ -410,7 +298,7 @@ class HomeView extends StatelessWidget {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('خروج', style: TextStyle(fontFamily: 'myfont')),
+              child: const Text('خروج', style: TextStyle()),
             ),
           ],
         ),

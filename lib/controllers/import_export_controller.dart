@@ -15,8 +15,8 @@ class ImportExportController extends GetxController {
   // حالة التصدير
   final Rx<ExportFilterType> exportFilterType = ExportFilterType.all.obs;
   final RxString selectedCustomer = ''.obs;
-  final Rx<DateTime?> fromDate = Rx<DateTime?>(null);
-  final Rx<DateTime?> toDate = Rx<DateTime?>(null);
+  final Rx<DateTime> fromDate = Rx<DateTime>(DateTime.now().subtract(const Duration(days: 30)));
+  final Rx<DateTime> toDate = Rx<DateTime>(DateTime.now());
   final RxBool isExporting = false.obs;
   final RxBool isImporting = false.obs;
 
@@ -42,23 +42,23 @@ class ImportExportController extends GetxController {
 
     if (exportFilterType.value == ExportFilterType.period ||
         exportFilterType.value == ExportFilterType.customerPeriod) {
-      if (fromDate.value != null) {
+     
         filtered = filtered
-            .where((e) => !e.date.isBefore(fromDate.value!))
+            .where((e) => !e.date.isBefore(fromDate.value))
             .toList();
-      }
-      if (toDate.value != null) {
+     
+     
         final endOfDay = DateTime(
-          toDate.value!.year,
-          toDate.value!.month,
-          toDate.value!.day,
+          toDate.value.year,
+          toDate.value.month,
+          toDate.value.day,
           23,
           59,
           59,
         );
         filtered =
             filtered.where((e) => !e.date.isAfter(endOfDay)).toList();
-      }
+      
     }
 
     filtered.sort((a, b) => b.date.compareTo(a.date));
@@ -79,44 +79,6 @@ class ImportExportController extends GetxController {
     }
   }
 
-  Future<void> selectFromDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate:
-          fromDate.value ?? DateTime.now().subtract(const Duration(days: 30)),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFF1565C0),
-            onPrimary: Colors.white,
-          ),
-        ),
-        child: child!,
-      ),
-    );
-    if (picked != null) fromDate.value = picked;
-  }
-
-  Future<void> selectToDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: toDate.value ?? DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: Color(0xFF1565C0),
-            onPrimary: Colors.white,
-          ),
-        ),
-        child: child!,
-      ),
-    );
-    if (picked != null) toDate.value = picked;
-  }
 
   /// تصدير للموبايل - يستخدم FilePicker
   Future<void> exportToExcelMobile() async {
@@ -289,8 +251,8 @@ class ImportExportController extends GetxController {
   void resetFilters() {
     exportFilterType.value = ExportFilterType.all;
     selectedCustomer.value = '';
-    fromDate.value = null;
-    toDate.value = null;
+    fromDate.value = DateTime.now().subtract(const Duration(days: 30));
+    toDate.value = (DateTime.now());
   }
 
   void resetImportResult() {

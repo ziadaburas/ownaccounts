@@ -70,7 +70,6 @@ class CustomersView extends StatelessWidget {
               fontSize: 17,
               color: AppColors.mediumGray,
               fontWeight: FontWeight.w600,
-              fontFamily: 'myfont',
             ),
           ),
           const SizedBox(height: 6),
@@ -79,7 +78,6 @@ class CustomersView extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               color: AppColors.textSubtitle,
-              fontFamily: 'myfont',
             ),
           ),
         ],
@@ -141,7 +139,6 @@ class CustomersView extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      fontFamily: 'myfont',
                     ),
                   ),
                 ),
@@ -160,7 +157,6 @@ class CustomersView extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
-                              fontFamily: 'myfont',
                               color: isDark ? Colors.white:Colors.black,
                             ),
                             maxLines: 1,
@@ -180,7 +176,6 @@ class CustomersView extends StatelessWidget {
                               color: balanceColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
-                              fontFamily: 'myfont',
                             ),
                           ),
                         ),
@@ -201,7 +196,6 @@ class CustomersView extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.textSubtitle,
-                            fontFamily: 'myfont',
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -220,7 +214,6 @@ class CustomersView extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.success,
-                            fontFamily: 'myfont',
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -239,7 +232,6 @@ class CustomersView extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.error,
-                            fontFamily: 'myfont',
                           ),
                         ),
                       ],
@@ -319,7 +311,6 @@ class CustomersView extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      fontFamily: 'myfont',
                     ),
                   ),
                 ),
@@ -337,7 +328,6 @@ class CustomersView extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            fontFamily: 'myfont',
                             color:balanceColor,
                           ),
                         ),
@@ -346,7 +336,7 @@ class CustomersView extends StatelessWidget {
                         //   style: TextStyle(
                         //     fontWeight: FontWeight.bold,
                         //     fontSize: 16,
-                        //     fontFamily: 'myfont',
+                        //,
                         //     color: balanceColor,
                         //   ),
                         // ),
@@ -362,7 +352,6 @@ class CustomersView extends StatelessWidget {
                         '${customer.entryCount} قيد',
                           style: TextStyle(
                             fontSize: 12,
-                            fontFamily: 'myfont',
                             color: isDark ? AppColors.darkTextSecondary : Colors.grey.shade500,
                           ),
                         ),
@@ -382,7 +371,6 @@ class CustomersView extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.success,
-                            fontFamily: 'myfont',
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -401,7 +389,6 @@ class CustomersView extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.error,
-                            fontFamily: 'myfont',
                           ),
                         ),
                       ],
@@ -423,7 +410,6 @@ class CustomersView extends StatelessWidget {
                               color: balanceColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
-                              fontFamily: 'myfont',
                             ),
                           ),
                         ),

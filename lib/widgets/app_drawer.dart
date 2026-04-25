@@ -29,7 +29,7 @@ class AppDrawer extends StatelessWidget {
         child: Column(
           children: [
             _buildDrawerHeader(authController),
-            Divider(color: AppColors.drawerDivider, height: 1, thickness: 1),
+            const Divider(color: AppColors.drawerDivider, height: 1, thickness: 1),
             const SizedBox(height: 8),
             Expanded(
               child: ListView(
@@ -63,7 +63,7 @@ class AppDrawer extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 8),
-                  Divider(color: AppColors.drawerDivider, height: 1),
+                  const Divider(color: AppColors.drawerDivider, height: 1),
                   const SizedBox(height: 8),
                   // التقارير - تفتح واجهة جديدة
                   _buildMenuItem(
@@ -86,17 +86,9 @@ class AppDrawer extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 8),
-                  Divider(color: AppColors.drawerDivider, height: 1),
+                  const Divider(color: AppColors.drawerDivider, height: 1),
                   const SizedBox(height: 8),
-                  _buildMenuItem(
-                    icon: Icons.cloud_sync_rounded,
-                    label: 'المزامنة والنسخ الاحتياطي',
-                    index: 5,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      onItemSelected(5);
-                    },
-                  ),
+                  
                   _buildMenuItem(
                     icon: Icons.settings_rounded,
                     label: 'الإعدادات',
@@ -172,7 +164,7 @@ class AppDrawer extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'myfont',
+                      
                     ),
                   ),
                   Text(
@@ -180,7 +172,7 @@ class AppDrawer extends StatelessWidget {
                     style: TextStyle(
                       color: Color(0xFF9DBFB4),
                       fontSize: 11,
-                      fontFamily: 'myfont',
+                      
                     ),
                   ),
                 ],
@@ -217,7 +209,7 @@ class AppDrawer extends StatelessWidget {
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
-                              fontFamily: 'myfont',
+                              
                             ),
                           )
                         : null,
@@ -234,7 +226,6 @@ class AppDrawer extends StatelessWidget {
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
-                          fontFamily: 'myfont',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -245,7 +236,6 @@ class AppDrawer extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.65),
                           fontSize: 11,
-                          fontFamily: 'myfont',
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -318,7 +308,6 @@ class AppDrawer extends StatelessWidget {
                       color: isActive ? AppColors.primaryLight : Colors.white.withOpacity(0.85),
                       fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
                       fontSize: 14,
-                      fontFamily: 'myfont',
                     ),
                   ),
                 ),
@@ -349,7 +338,7 @@ class AppDrawer extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.15),
-        border: Border(
+        border:const Border(
           top: BorderSide(color: AppColors.drawerDivider, width: 1),
         ),
       ),
@@ -362,7 +351,6 @@ class AppDrawer extends StatelessWidget {
               style: TextStyle(
                 color: Color(0xFF6B9E8E),
                 fontSize: 11,
-                fontFamily: 'myfont',
               ),
             ),
           ),
@@ -396,7 +384,6 @@ class AppDrawer extends StatelessWidget {
                         color: AppColors.error,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        fontFamily: 'myfont',
                       ),
                     ),
                   ],
@@ -433,21 +420,20 @@ class AppDrawer extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
-                  fontFamily: 'myfont',
                 ),
               ),
             ],
           ),
           content: const Text(
             'هل تريد تسجيل الخروج من حسابك؟',
-            style: TextStyle(fontSize: 14, fontFamily: 'myfont'),
+            style: TextStyle(fontSize: 14, ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text(
                 'إلغاء',
-                style: TextStyle(color: AppColors.mediumGray, fontFamily: 'myfont'),
+                style: TextStyle(color: AppColors.mediumGray),
               ),
             ),
             ElevatedButton(
@@ -460,7 +446,7 @@ class AppDrawer extends StatelessWidget {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('خروج', style: TextStyle(fontFamily: 'myfont')),
+              child: const Text('خروج'),
             ),
           ],
         ),

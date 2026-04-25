@@ -70,7 +70,6 @@ class SettingsView extends StatelessWidget {
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'myfont',
                               ),
                             ),
                             SizedBox(height: 2),
@@ -79,7 +78,6 @@ class SettingsView extends StatelessWidget {
                               style: TextStyle(
                                 color: Color(0xFFB2D8C8),
                                 fontSize: 12,
-                                fontFamily: 'myfont',
                               ),
                             ),
                           ],
@@ -141,7 +139,6 @@ class SettingsView extends StatelessWidget {
                                           color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 22,
-                                          fontFamily: 'myfont',
                                         ),
                                       )
                                     : null,
@@ -157,7 +154,6 @@ class SettingsView extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      fontFamily: 'myfont',
                                       color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
                                     ),
                                   ),
@@ -166,7 +162,6 @@ class SettingsView extends StatelessWidget {
                                     user?.email ?? '',
                                     style: TextStyle(
                                       fontSize: 13,
-                                      fontFamily: 'myfont',
                                       color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
                                     ),
                                   ),
@@ -291,7 +286,6 @@ class SettingsView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'myfont',
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
@@ -315,7 +309,6 @@ class SettingsView extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
-                          fontFamily: 'myfont',
                         ),
                       ),
                     ),
@@ -349,7 +342,6 @@ class SettingsView extends StatelessWidget {
             fontSize: 17,
             fontWeight: FontWeight.bold,
             color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-            fontFamily: 'myfont',
           ),
         ),
       ],
@@ -401,7 +393,6 @@ class SettingsView extends StatelessWidget {
                       color: isSelected
                           ? (isDark ? AppColors.primaryLight : AppColors.primaryDark)
                           : (isDark ? AppColors.darkTextPrimary : AppColors.textPrimary),
-                      fontFamily: 'myfont',
                     ),
                   ),
                   Text(
@@ -409,7 +400,6 @@ class SettingsView extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11,
                       color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
-                      fontFamily: 'myfont',
                     ),
                   ),
                 ],
@@ -478,7 +468,6 @@ class SettingsView extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                       color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-                      fontFamily: 'myfont',
                     ),
                   ),
                   Text(
@@ -486,7 +475,6 @@ class SettingsView extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11,
                       color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
-                      fontFamily: 'myfont',
                     ),
                   ),
                 ],
@@ -526,7 +514,6 @@ class SettingsView extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  fontFamily: 'myfont',
                   color: isDark ? AppColors.darkTextPrimary : null,
                 ),
               ),
@@ -536,7 +523,6 @@ class SettingsView extends StatelessWidget {
             'سيتم حذف جميع القيود المخزنة على هذا الجهاز. هذا الإجراء لا يمكن التراجع عنه.\n\nملاحظة: البيانات السحابية لن تتأثر.',
             style: TextStyle(
               fontSize: 14,
-              fontFamily: 'myfont',
               color: isDark ? AppColors.darkTextSecondary : null,
             ),
           ),
@@ -546,8 +532,7 @@ class SettingsView extends StatelessWidget {
               child: Text(
                 'إلغاء',
                 style: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
-                    fontFamily: 'myfont'),
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray),
               ),
             ),
             ElevatedButton(
@@ -561,7 +546,7 @@ class SettingsView extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('حذف', style: TextStyle(fontFamily: 'myfont')),
+              child: const Text('حذف', style: TextStyle()),
             ),
           ],
         ),
@@ -595,7 +580,6 @@ class SettingsView extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
-                    fontFamily: 'myfont',
                     color: isDark ? AppColors.darkTextPrimary : null,
                   ),
                 ),
@@ -606,7 +590,6 @@ class SettingsView extends StatelessWidget {
             'سيتم حذف جميع البيانات المخزنة في Google Drive بشكل نهائي. هذا الإجراء لا يمكن التراجع عنه.',
             style: TextStyle(
               fontSize: 14,
-              fontFamily: 'myfont',
               color: isDark ? AppColors.darkTextSecondary : null,
             ),
           ),
@@ -616,8 +599,7 @@ class SettingsView extends StatelessWidget {
               child: Text(
                 'إلغاء',
                 style: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
-                    fontFamily: 'myfont'),
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray),
               ),
             ),
             ElevatedButton(
@@ -631,7 +613,7 @@ class SettingsView extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('حذف نهائي', style: TextStyle(fontFamily: 'myfont')),
+              child: const Text('حذف نهائي', style: TextStyle()),
             ),
           ],
         ),
@@ -664,7 +646,6 @@ class SettingsView extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
-                  fontFamily: 'myfont',
                   color: isDark ? AppColors.darkTextPrimary : null,
                 ),
               ),
@@ -674,7 +655,6 @@ class SettingsView extends StatelessWidget {
             'هل تريد تسجيل الخروج من حسابك؟',
             style: TextStyle(
               fontSize: 14,
-              fontFamily: 'myfont',
               color: isDark ? AppColors.darkTextSecondary : null,
             ),
           ),
@@ -684,8 +664,7 @@ class SettingsView extends StatelessWidget {
               child: Text(
                 'إلغاء',
                 style: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
-                    fontFamily: 'myfont'),
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray),
               ),
             ),
             ElevatedButton(
@@ -699,7 +678,7 @@ class SettingsView extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
-              child: const Text('خروج', style: TextStyle(fontFamily: 'myfont')),
+              child: const Text('خروج', style: TextStyle()),
             ),
           ],
         ),

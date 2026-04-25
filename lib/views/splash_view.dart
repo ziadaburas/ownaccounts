@@ -183,7 +183,6 @@ class _SplashViewState extends State<SplashView>
                               fontSize: 34,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 0.5,
-                              fontFamily: 'myfont',
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -192,7 +191,6 @@ class _SplashViewState extends State<SplashView>
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.75),
                               fontSize: 16,
-                              fontFamily: 'myfont',
                             ),
                           ),
                         ],
@@ -223,7 +221,6 @@ class _SplashViewState extends State<SplashView>
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.6),
                               fontSize: 13,
-                              fontFamily: 'myfont',
                             ),
                           ),
                         ],

@@ -68,13 +68,13 @@ class AppColors {
 class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
+      fontFamily: 'myfont',
       colorScheme: const ColorScheme.light(
         primary: AppColors.primaryDark,
         secondary: AppColors.primaryMedium,
         surface: AppColors.cardBackground,
         error: AppColors.error,
       ),
-      fontFamily: 'myfont',
       useMaterial3: true,
       scaffoldBackgroundColor: AppColors.background,
       appBarTheme: const AppBarTheme(
@@ -176,6 +176,7 @@ class AppTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
+      fontFamily: 'myfont',
       colorScheme: ColorScheme.dark(
         primary: AppColors.primaryLight,
         secondary: AppColors.primaryMedium,
@@ -184,7 +185,6 @@ class AppTheme {
         onSurface: AppColors.darkTextPrimary,
         brightness: Brightness.dark,
       ),
-      fontFamily: 'myfont',
       useMaterial3: true,
       scaffoldBackgroundColor: AppColors.darkBackground,
       appBarTheme: const AppBarTheme(
@@ -288,64 +288,54 @@ class AppTheme {
 // Text Styles
 class AppTextStyles {
   static const TextStyle heading1 = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 24,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
   );
 
   static const TextStyle heading2 = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 20,
     fontWeight: FontWeight.bold,
     color: AppColors.textPrimary,
   );
 
   static const TextStyle heading3 = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 17,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
   static const TextStyle body = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 14,
     color: AppColors.textPrimary,
   );
 
   static const TextStyle bodySecondary = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 13,
     color: AppColors.textSecondary,
   );
 
   static const TextStyle caption = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 11,
     color: AppColors.textSubtitle,
   );
 
   static const TextStyle amountLarge = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 22,
     fontWeight: FontWeight.bold,
   );
 
   static const TextStyle amountMedium = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 16,
     fontWeight: FontWeight.bold,
   );
 
   static const TextStyle onDark = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 14,
     color: AppColors.textOnDark,
   );
 
   static const TextStyle onDarkBold = TextStyle(
-    fontFamily: 'myfont',
     fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.textOnDark,

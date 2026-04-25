@@ -87,7 +87,6 @@ class CustomEntryTile extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            fontFamily: 'myfont',
                             color: mainColor,
                           ),
                         ),

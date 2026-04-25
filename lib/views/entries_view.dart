@@ -134,7 +134,6 @@ class EntriesView extends StatelessWidget {
             onDelete: () => entriesController.confirmDelete(entry),
             onTap: () => Get.to(() => AddEntryView(editEntry: entry))
             )
-    
       
       ]
     );

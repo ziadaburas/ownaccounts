@@ -99,7 +99,6 @@ class LoginView extends GetView<AuthController> {
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       letterSpacing: 0.5,
-                      fontFamily: 'myfont',
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -108,7 +107,6 @@ class LoginView extends GetView<AuthController> {
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.white.withOpacity(0.75),
-                      fontFamily: 'myfont',
                     ),
                   ),
                   const Spacer(flex: 2),
@@ -181,7 +179,6 @@ class LoginView extends GetView<AuthController> {
                                       style: TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
-                                        fontFamily: 'myfont',
                                       ),
                                     ),
                                   ],
@@ -201,7 +198,6 @@ class LoginView extends GetView<AuthController> {
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white.withOpacity(0.55),
-                          fontFamily: 'myfont',
                         ),
                       ),
                     ],
@@ -237,7 +233,6 @@ class LoginView extends GetView<AuthController> {
               color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              fontFamily: 'myfont',
             ),
           ),
         ),

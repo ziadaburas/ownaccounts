@@ -21,7 +21,6 @@ class BalanceHeader extends StatelessWidget {
             color: color,
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            fontFamily: 'myfont',
           ),
         ),
         const SizedBox(height: 2),
@@ -30,7 +29,6 @@ class BalanceHeader extends StatelessWidget {
           style: TextStyle(
             color: Colors.white.withOpacity(0.6),
             fontSize: 10,
-            fontFamily: 'myfont',
           ),
           textAlign: TextAlign.center,
         ),

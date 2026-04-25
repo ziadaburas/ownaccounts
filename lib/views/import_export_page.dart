@@ -2,9 +2,15 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import '../controllers/entries_controller.dart';
 import '../controllers/import_export_controller.dart';
 import '../theme/app_theme.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/balance_header.dart';
+import '../widgets/custom_inpus.dart';
+// تأكد من استيراد مسارات الويدجت الخاصة بك هنا:
+// import '../widgets/custom_app_bar.dart';
+// import '../widgets/balance_header.dart';
 
 class ImportExportPage extends StatelessWidget {
   const ImportExportPage({super.key});
@@ -12,82 +18,56 @@ class ImportExportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ImportExportController());
-    final dateFormatter = DateFormat('dd/MM/yyyy', 'en_US');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
+        backgroundColor:
+            isDark ? AppColors.darkBackground : AppColors.background,
         body: Column(
           children: [
-            // Header
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [AppColors.primaryMedium, AppColors.primaryDark],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0x330F3D2E),
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
+            // Header: استخدام CustomAppBar و BalanceHeader
+            Obx(() {
+              // حساب الإحصائيات لعرضها في الهيدر بناءً على فلاتر التصدير المحددة
+              final entries = controller.filteredEntries;
+              double credit = 0, debit = 0;
+              for (final e in entries) {
+                if (e.isCredit) {
+                  credit += e.amount;
+                } else {
+                  debit += e.amount;
+                }
+              }
+
+              return CustomAppBar(
+                onDrawerPressed: () => Get.back(),
+                drawerIcon: Icons.arrow_forward_ios_rounded,
+                drawerTooltip: 'رجوع',
+
+                // أيقونة التصدير والاستيراد
+                profileWidget: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    shape: BoxShape.circle,
                   ),
-                ],
-              ),
-              child: SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 16),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Get.back(),
-                        icon: const Icon(Icons.arrow_forward_ios_rounded,
-                            color: Colors.white, size: 20),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.import_export_rounded,
-                            color: Colors.white, size: 24),
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'التصدير والاستيراد',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'myfont',
-                              ),
-                            ),
-                            SizedBox(height: 2),
-                            Text(
-                              'تبادل البيانات مع ملفات Excel',
-                              style: TextStyle(
-                                color: Color(0xFFB2D8C8),
-                                fontSize: 12,
-                                fontFamily: 'myfont',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  child: const Icon(
+                    Icons.import_export_rounded,
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
-              ),
-            ),
+                welcomeText: 'التصدير والاستيراد',
+                emailText: 'تبادل البيانات مع ملفات Excel',
+
+                // تمرير الرصيد وعدد القيود
+                balanceHeader: BalanceHeader(
+                  totalCredit: credit,
+                  totalDebit: debit,
+                ),
+              );
+            }),
 
             // Content
             Expanded(
@@ -106,21 +86,34 @@ class ImportExportPage extends StatelessWidget {
 
                     Obx(() => Column(
                           children: [
-                            _buildFilterOption(controller, ExportFilterType.all,
-                                'كل القيود', Icons.receipt_long_rounded,
-                                'تصدير جميع القيود', isDark),
                             _buildFilterOption(
-                                controller, ExportFilterType.customer,
-                                'عميل محدد', Icons.person_rounded,
-                                'تصدير قيود عميل معين', isDark),
+                                controller,
+                                ExportFilterType.all,
+                                'كل القيود',
+                                Icons.receipt_long_rounded,
+                                'تصدير جميع القيود',
+                                isDark),
                             _buildFilterOption(
-                                controller, ExportFilterType.period,
-                                'فترة محددة', Icons.date_range_rounded,
-                                'تصدير قيود خلال فترة زمنية', isDark),
+                                controller,
+                                ExportFilterType.customer,
+                                'عميل محدد',
+                                Icons.person_rounded,
+                                'تصدير قيود عميل معين',
+                                isDark),
                             _buildFilterOption(
-                                controller, ExportFilterType.customerPeriod,
-                                'عميل + فترة', Icons.filter_alt_rounded,
-                                'تصدير قيود عميل في فترة محددة', isDark),
+                                controller,
+                                ExportFilterType.period,
+                                'فترة محددة',
+                                Icons.date_range_rounded,
+                                'تصدير قيود خلال فترة زمنية',
+                                isDark),
+                            _buildFilterOption(
+                                controller,
+                                ExportFilterType.customerPeriod,
+                                'عميل + فترة',
+                                Icons.filter_alt_rounded,
+                                'تصدير قيود عميل في فترة محددة',
+                                isDark),
                           ],
                         )),
 
@@ -128,16 +121,14 @@ class ImportExportPage extends StatelessWidget {
 
                     // Additional Filters
                     Obx(() {
-                      final showCustomer =
+                      final showCustomer = controller.exportFilterType.value ==
+                              ExportFilterType.customer ||
                           controller.exportFilterType.value ==
-                                  ExportFilterType.customer ||
-                              controller.exportFilterType.value ==
-                                  ExportFilterType.customerPeriod;
-                      final showDate =
+                              ExportFilterType.customerPeriod;
+                      final showDate = controller.exportFilterType.value ==
+                              ExportFilterType.period ||
                           controller.exportFilterType.value ==
-                                  ExportFilterType.period ||
-                              controller.exportFilterType.value ==
-                                  ExportFilterType.customerPeriod;
+                              ExportFilterType.customerPeriod;
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,28 +136,50 @@ class ImportExportPage extends StatelessWidget {
                           if (showCustomer) ...[
                             _buildLabel('اختر العميل', isDark),
                             const SizedBox(height: 8),
-                            _buildCustomerDropdown(controller, isDark),
+                            CustomDropdownField(
+                              items: Get.find<EntriesController>()
+                                  .customerNames, // أو controller.availableCustomers
+                              hintText: 'اختر العميل',
+                              selectedValue: controller.selectedCustomer.value,
+                              isDark: isDark,
+                              onChanged: (value) {
+                                if (value != null) {
+                                  controller.selectedCustomer.value = value;
+                                }
+                              },
+                            ),
                             const SizedBox(height: 14),
                           ],
                           if (showDate) ...[
                             _buildLabel('الفترة الزمنية', isDark),
                             const SizedBox(height: 8),
+                           
                             Row(
                               children: [
                                 Expanded(
-                                  child: _buildDateSelector(
-                                      context, 'من تاريخ',
-                                      controller.fromDate.value, dateFormatter,
-                                      () => controller.selectFromDate(context),
-                                      isDark),
+                                  child: CustomDateTimePicker(
+                                    selectedDate: controller.fromDate.value,
+                                    isDark: isDark,
+                                    includeTime: false, // اجعلها false إذا كنت تريد تاريخ فقط بدون وقت
+                                    hint: 'من تاريخ',
+                                    onChanged: (newDate) {
+                                      controller.fromDate.value = newDate;
+                                    },
+                                  ),
                                 ),
-                                const SizedBox(width: 10),
+                                const SizedBox(width: 12),
                                 Expanded(
-                                  child: _buildDateSelector(
-                                      context, 'إلى تاريخ',
-                                      controller.toDate.value, dateFormatter,
-                                      () => controller.selectToDate(context),
-                                      isDark),
+                                  child: 
+                                 CustomDateTimePicker(
+                                    selectedDate:controller.toDate.value,
+                                    isDark: isDark,
+                                    includeTime: false, // اجعلها false إذا كنت تريد تاريخ فقط بدون وقت
+                                    hint: 'إلى تاريخ',
+                                    onChanged: (newDate) {
+                                      controller.toDate.value = newDate;
+                                    },
+                                  ),
+                                  
                                 ),
                               ],
                             ),
@@ -176,77 +189,7 @@ class ImportExportPage extends StatelessWidget {
                       );
                     }),
 
-                    // Export Preview
-                    Obx(() {
-                      final entries = controller.filteredEntries;
-                      double credit = 0, debit = 0;
-                      for (final e in entries) {
-                        if (e.isCredit) {
-                          credit += e.amount;
-                        } else {
-                          debit += e.amount;
-                        }
-                      }
-                      final amountFmt = NumberFormat('#,##0.##', 'en_US');
-                      final balance = credit - debit;
-
-                      return Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? AppColors.success.withOpacity(0.08)
-                              : AppColors.success.withOpacity(0.05),
-                          borderRadius: BorderRadius.circular(13),
-                          border: Border.all(
-                              color: AppColors.success.withOpacity(0.2)),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                const Icon(Icons.preview_rounded,
-                                    color: AppColors.success, size: 16),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'معاينة التصدير: ${entries.length} قيد',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.success,
-                                    fontSize: 13,
-                                    fontFamily: 'myfont',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (entries.isNotEmpty) ...[
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  _buildMiniStat('لي',
-                                      amountFmt.format(credit), AppColors.success),
-                                  _buildMiniStat('علي',
-                                      amountFmt.format(debit), AppColors.error),
-                                  _buildMiniStat(
-                                    'الرصيد',
-                                    '${balance >= 0 ? '+' : ''}${amountFmt.format(balance)}',
-                                    balance >= 0
-                                        ? AppColors.success
-                                        : AppColors.error,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ],
-                        ),
-                      );
-                    }),
-
-                    const SizedBox(height: 14),
-
-                    // Export Button
+                    // Export Button (تم حذف مربع المعاينة من هنا)
                     Obx(() => SizedBox(
                           width: double.infinity,
                           height: 52,
@@ -267,9 +210,7 @@ class ImportExportPage extends StatelessWidget {
                                   ? 'جاري التصدير...'
                                   : 'تصدير إلى Excel',
                               style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'myfont'),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.success,
@@ -277,18 +218,19 @@ class ImportExportPage extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(13)),
                               elevation: 2,
-                              shadowColor:
-                                  AppColors.success.withOpacity(0.3),
+                              shadowColor: AppColors.success.withOpacity(0.3),
                             ),
                           ),
                         )),
+
+                    const SizedBox(height: 14),
 
                     Center(
                       child: TextButton.icon(
                         onPressed: () => controller.resetFilters(),
                         icon: const Icon(Icons.refresh_rounded, size: 16),
                         label: const Text('إعادة تعيين الفلاتر',
-                            style: TextStyle(fontFamily: 'myfont')),
+                            style: TextStyle()),
                         style: TextButton.styleFrom(
                             foregroundColor: AppColors.mediumGray),
                       ),
@@ -296,7 +238,9 @@ class ImportExportPage extends StatelessWidget {
 
                     const SizedBox(height: 6),
                     Divider(
-                        color: isDark ? AppColors.darkDivider : AppColors.lightGray,
+                        color: isDark
+                            ? AppColors.darkDivider
+                            : AppColors.lightGray,
                         thickness: 1.5),
                     const SizedBox(height: 16),
 
@@ -335,14 +279,13 @@ class ImportExportPage extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primaryMedium,
                                   fontSize: 13,
-                                  fontFamily: 'myfont',
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 10),
-                          _buildInstruction(
-                              '1', 'الملف يجب أن يكون بصيغة .xlsx أو .xls', isDark),
+                          _buildInstruction('1',
+                              'الملف يجب أن يكون بصيغة .xlsx أو .xls', isDark),
                           _buildInstruction(
                               '2',
                               'الصف الأول يجب أن يكون رأس الجدول (التاريخ، العميل، الاتجاه، المبلغ)',
@@ -384,9 +327,7 @@ class ImportExportPage extends StatelessWidget {
                                   ? 'جاري الاستيراد...'
                                   : 'اختر ملف Excel للاستيراد',
                               style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'myfont'),
+                                  fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryDark,
@@ -414,8 +355,8 @@ class ImportExportPage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: resultColor.withOpacity(0.07),
                           borderRadius: BorderRadius.circular(13),
-                          border: Border.all(
-                              color: resultColor.withOpacity(0.25)),
+                          border:
+                              Border.all(color: resultColor.withOpacity(0.25)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,15 +379,14 @@ class ImportExportPage extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: resultColor,
-                                      fontFamily: 'myfont',
                                     ),
                                   ),
                                 ),
                                 IconButton(
                                   onPressed: () =>
                                       controller.resetImportResult(),
-                                  icon: const Icon(Icons.close_rounded,
-                                      size: 18),
+                                  icon:
+                                      const Icon(Icons.close_rounded, size: 18),
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                   color: AppColors.mediumGray,
@@ -461,7 +401,6 @@ class ImportExportPage extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                   color: Colors.orange.shade700,
                                   fontSize: 12,
-                                  fontFamily: 'myfont',
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -474,8 +413,7 @@ class ImportExportPage extends StatelessWidget {
                                           '\u2022 $e',
                                           style: TextStyle(
                                               fontSize: 11,
-                                              color: Colors.orange.shade800,
-                                              fontFamily: 'myfont'),
+                                              color: Colors.orange.shade800),
                                         ),
                                       )),
                               if (controller.importErrors.length > 5)
@@ -483,8 +421,7 @@ class ImportExportPage extends StatelessWidget {
                                   '... و ${controller.importErrors.length - 5} تنبيه آخر',
                                   style: TextStyle(
                                       fontSize: 11,
-                                      color: Colors.orange.shade800,
-                                      fontFamily: 'myfont'),
+                                      color: Colors.orange.shade800),
                                 ),
                             ],
                           ],
@@ -508,7 +445,6 @@ class ImportExportPage extends StatelessWidget {
         fontSize: 13,
         fontWeight: FontWeight.w600,
         color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-        fontFamily: 'myfont',
       ),
     );
   }
@@ -533,7 +469,6 @@ class ImportExportPage extends StatelessWidget {
             fontSize: 17,
             fontWeight: FontWeight.bold,
             color: color,
-            fontFamily: 'myfont',
           ),
         ),
       ],
@@ -585,7 +520,9 @@ class ImportExportPage extends StatelessWidget {
               ),
               child: Icon(icon,
                   color: isSelected
-                      ? (isDark ? AppColors.primaryLight : AppColors.primaryDark)
+                      ? (isDark
+                          ? AppColors.primaryLight
+                          : AppColors.primaryDark)
                       : AppColors.mediumGray,
                   size: 20),
             ),
@@ -599,17 +536,19 @@ class ImportExportPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
                         color: isSelected
-                            ? (isDark ? AppColors.primaryLight : AppColors.primaryDark)
-                            : (isDark ? AppColors.darkTextPrimary : AppColors.textPrimary),
-                        fontFamily: 'myfont',
+                            ? (isDark
+                                ? AppColors.primaryLight
+                                : AppColors.primaryDark)
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.textPrimary),
                       )),
                   Text(subtitle,
                       style: TextStyle(
                           fontSize: 11,
                           color: isDark
                               ? AppColors.darkTextSecondary
-                              : AppColors.mediumGray,
-                          fontFamily: 'myfont')),
+                              : AppColors.mediumGray)),
                 ],
               ),
             ),
@@ -625,140 +564,6 @@ class ImportExportPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCustomerDropdown(ImportExportController controller, bool isDark) {
-    final customers = controller.availableCustomers;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-            color: isDark ? AppColors.darkDivider : AppColors.lightGray),
-        boxShadow: isDark ? null : AppShadows.cardShadow,
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          isExpanded: true,
-          dropdownColor: isDark ? AppColors.darkCard : null,
-          hint: Text('اختر العميل',
-              style: TextStyle(
-                  color: isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.textSubtitle,
-                  fontFamily: 'myfont')),
-          value: controller.selectedCustomer.value.isNotEmpty
-              ? controller.selectedCustomer.value
-              : null,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded,
-              color: AppColors.primaryMedium),
-          style: TextStyle(
-              color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
-              fontFamily: 'myfont',
-              fontSize: 14),
-          items: customers
-              .map((name) =>
-                  DropdownMenuItem(value: name, child: Text(name)))
-              .toList(),
-          onChanged: (value) {
-            if (value != null) controller.selectedCustomer.value = value;
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDateSelector(
-    BuildContext context,
-    String label,
-    DateTime? date,
-    DateFormat formatter,
-    VoidCallback onTap,
-    bool isDark,
-  ) {
-    final hasDate = date != null;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: hasDate
-              ? (isDark
-                  ? AppColors.primaryMedium.withOpacity(0.1)
-                  : AppColors.primaryDark.withOpacity(0.04))
-              : (isDark ? AppColors.darkCard : AppColors.cardBackground),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: hasDate
-                ? AppColors.primaryMedium
-                : (isDark ? AppColors.darkDivider : AppColors.lightGray),
-            width: hasDate ? 1.5 : 1,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: hasDate
-                      ? AppColors.primaryMedium
-                      : (isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.textSubtitle),
-                  fontFamily: 'myfont',
-                )),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Icon(Icons.calendar_today_rounded,
-                    size: 13,
-                    color: hasDate
-                        ? AppColors.primaryMedium
-                        : AppColors.mediumGray),
-                const SizedBox(width: 5),
-                Text(
-                  hasDate ? formatter.format(date) : 'اختر',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: hasDate
-                        ? (isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.textPrimary)
-                        : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.textSubtitle),
-                    fontFamily: 'myfont',
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMiniStat(String label, String value, Color color) {
-    return Column(
-      children: [
-        Text(label,
-            style: const TextStyle(
-                fontSize: 11,
-                color: AppColors.mediumGray,
-                fontFamily: 'myfont')),
-        const SizedBox(height: 2),
-        Text(value,
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: color,
-                fontFamily: 'myfont')),
-      ],
     );
   }
 
@@ -782,8 +587,7 @@ class ImportExportPage extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primaryMedium,
-                      fontFamily: 'myfont')),
+                      color: AppColors.primaryMedium)),
             ),
           ),
           const SizedBox(width: 8),
@@ -793,8 +597,7 @@ class ImportExportPage extends StatelessWidget {
                     fontSize: 12,
                     color: isDark
                         ? AppColors.darkTextSecondary
-                        : AppColors.mediumGray,
-                    fontFamily: 'myfont')),
+                        : AppColors.mediumGray)),
           ),
         ],
       ),
@@ -805,7 +608,9 @@ class ImportExportPage extends StatelessWidget {
       BuildContext context, ImportExportController controller) async {
     final entries = controller.filteredEntries;
     if (entries.isEmpty) {
-      Get.snackbar('تنبيه', 'لا توجد قيود مطابقة للفلتر المحدد',
+      Get.snackbar(
+        'تنبيه',
+        'لا توجد قيود مطابقة للفلتر المحدد',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.orange,
         colorText: Colors.white,
@@ -818,7 +623,9 @@ class ImportExportPage extends StatelessWidget {
     try {
       final bytes = await controller.generateExcelBytes();
       if (bytes == null) {
-        Get.snackbar('خطأ', 'فشل إنشاء ملف Excel',
+        Get.snackbar(
+          'خطأ',
+          'فشل إنشاء ملف Excel',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: AppColors.error,
           colorText: Colors.white,
@@ -830,7 +637,8 @@ class ImportExportPage extends StatelessWidget {
       if (kIsWeb) {
         _downloadFileWeb(bytes, controller.exportFileName);
         Get.snackbar(
-            'تم التصدير بنجاح', 'تم تحميل ملف Excel (${entries.length} قيد)',
+          'تم التصدير بنجاح',
+          'تم تحميل ملف Excel (${entries.length} قيد)',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: AppColors.success,
           colorText: Colors.white,
@@ -841,7 +649,9 @@ class ImportExportPage extends StatelessWidget {
         await controller.exportToExcelMobile();
       }
     } catch (e) {
-      Get.snackbar('خطأ', 'حدث خطأ: $e',
+      Get.snackbar(
+        'خطأ',
+        'حدث خطأ: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.error,
         colorText: Colors.white,

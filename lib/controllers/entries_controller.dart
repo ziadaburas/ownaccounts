@@ -154,13 +154,11 @@ class EntriesController extends GetxController {
       title: 'حذف القيد',
       titleStyle: TextStyle(
         fontWeight: FontWeight.bold,
-        fontFamily: 'myfont',
         color: isDark ? AppColors.darkTextPrimary : null,
       ),
       middleText:
           'هل أنت متأكد من حذف هذا القيد؟\n\n${entry.isCredit ? "لي" : "عليا"} - ${entry.amount}',
       middleTextStyle: TextStyle(
-        fontFamily: 'myfont',
         color: isDark ? AppColors.darkTextSecondary : null,
       ),
       backgroundColor: isDark ? AppColors.darkCard : Colors.white,
