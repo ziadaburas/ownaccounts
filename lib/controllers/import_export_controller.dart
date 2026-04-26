@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../models/entry_model.dart';
 import '../services/excel_service.dart';
 import 'auth_controller.dart';
+import 'dialog_helper.dart';
 import 'entries_controller.dart';
 
 enum ExportFilterType { all, customer, period, customerPeriod }
@@ -84,13 +85,8 @@ class ImportExportController extends GetxController {
   Future<void> exportToExcelMobile() async {
     final entries = filteredEntries;
     if (entries.isEmpty) {
-      Get.snackbar(
-        'تنبيه',
-        'لا توجد قيود مطابقة للفلتر المحدد',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+     
+      showMsgDialog(message: 'لا توجد قيود مطابقة للفلتر المحدد',type: MsgType.warning);
       return;
     }
 
@@ -98,13 +94,8 @@ class ImportExportController extends GetxController {
     try {
       final bytes = await ExcelService.exportEntries(entries: entries);
       if (bytes == null) {
-        Get.snackbar(
-          'خطأ',
-          'فشل إنشاء ملف Excel',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        
+        showMsgDialog(message: 'فشل إنشاء ملف Excel',type: MsgType.error);
         return;
       }
 
@@ -117,24 +108,13 @@ class ImportExportController extends GetxController {
       );
 
       if (savePath != null) {
-        Get.snackbar(
-          'تم التصدير بنجاح',
-          'تم حفظ الملف:\n$savePath',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: const Color(0xFF4CAF50),
-          colorText: Colors.white,
-          duration: const Duration(seconds: 5),
-        );
+        
+        showMsgDialog(message: 'تم حفظ الملف:\n$savePath',type: MsgType.success);
       }
     } catch (e) {
       if (kDebugMode) debugPrint('Export error: $e');
-      Get.snackbar(
-        'خطأ',
-        'حدث خطأ أثناء التصدير',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      
+      showMsgDialog(message:'حدث خطأ أثناء التصدير' ,type: MsgType.error);
     } finally {
       isExporting.value = false;
     }
@@ -165,13 +145,8 @@ class ImportExportController extends GetxController {
 
       final file = result.files.first;
       if (file.bytes == null) {
-        Get.snackbar(
-          'خطأ',
-          'لم يتم قراءة الملف بشكل صحيح',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+     
+        showMsgDialog(message: 'لم يتم قراءة الملف بشكل صحيح',type: MsgType.error);
         isImporting.value = false;
         return;
       }
@@ -191,13 +166,8 @@ class ImportExportController extends GetxController {
       final userId = authController.user.value?.uid;
 
       if (userId == null) {
-        Get.snackbar(
-          'خطأ',
-          'يجب تسجيل الدخول أولاً',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        
+        showMsgDialog(message: 'يجب تسجيل الدخول أولاً',type: MsgType.error);
         isImporting.value = false;
         return;
       }
@@ -225,24 +195,13 @@ class ImportExportController extends GetxController {
       showImportResult.value = true;
 
       if (added > 0) {
-        Get.snackbar(
-          'تم الاستيراد بنجاح',
-          'تم إضافة $added قيد من الملف',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: const Color(0xFF4CAF50),
-          colorText: Colors.white,
-          duration: const Duration(seconds: 4),
-        );
+        
+        showMsgDialog(message:'تم إضافة $added قيد من الملف' ,type: MsgType.success);
       }
     } catch (e) {
       if (kDebugMode) debugPrint('Import error: $e');
-      Get.snackbar(
-        'خطأ',
-        'حدث خطأ أثناء الاستيراد: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      
+      showMsgDialog(message: 'حدث خطأ أثناء الاستيراد: $e',type: MsgType.error);
     } finally {
       isImporting.value = false;
     }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hisabati/controllers/dialog_helper.dart';
 import '../models/entry_model.dart';
-import '../theme/app_theme.dart';
 import 'auth_controller.dart';
 import 'entries_controller.dart';
 
@@ -31,14 +31,7 @@ class AddEntryController extends GetxController {
     filteredCustomers.assignAll(customerSuggestions);
     filteredNotes.assignAll(noteSuggestions);
 
-    // 2. مراقبة الحقول وتحديث المصفوفات تلقائياً عند الكتابة
-    // customerController.addListener(() {
-    //   _updateFilteredCustomers(customerController.text);
-    // });
-
-    // noteController.addListener(() {
-    //   _updateFilteredNotes(noteController.text);
-    // });
+    
   }
 
   // 3. دوال التحديث (يمكنك حذف دوال getFilteredCustomers و getFilteredNotes القديمة)
@@ -96,66 +89,18 @@ class AddEntryController extends GetxController {
         .toList();
   }
 
-  Future<void> selectDate(BuildContext context,bool isDark) async {
-    // 1. اختيار التاريخ أولاً
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate.value,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2030),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: isDark? const ColorScheme.dark(
-              primary:AppColors.primaryLight,
-              onPrimary: AppColors.white,
-            ):const ColorScheme.light(
-              primary:AppColors.primaryLight,
-              onPrimary: Colors.white,
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (pickedDate != null) {
-      // 2. إذا تم اختيار التاريخ بنجاح، افتح نافذة اختيار الوقت
-      final pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDate.value),
-        builder: (context, child) {
-          return Theme(
-            data: Theme.of(context).copyWith(
-              colorScheme: isDark? const ColorScheme.dark(
-              primary:AppColors.primaryLight,
-              onPrimary: AppColors.white,
-            ):const ColorScheme.light(
-              primary:AppColors.primaryLight,
-              onPrimary: Colors.white,
-            ),
-            ),
-            child: child!,
-          );
-        },
-      );
-
-      // 3. دمج التاريخ والوقت معاً
-      if (pickedTime != null) {
-        selectedDate.value = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-      }
-    }
-  }
+  
 
   Future<bool> saveEntry() async {
     if (!formKey.currentState!.validate()) return false;
-
+    if(
+    noteController.value.text.isEmpty ||
+    customerController.text.isEmpty
+    ){
+      showMsgDialog(message: "يرجى تعبئة كل الحقول",type: MsgType.error);
+      return false;
+    }
+    
     isSaving.value = true;
 
     final authController = Get.find<AuthController>();

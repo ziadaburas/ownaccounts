@@ -136,20 +136,33 @@ class DatabaseService {
   }
 
   // Replace all entries (after full sync from cloud)
-  Future<void> replaceAllEntries(
-      String userId, List<EntryModel> entries) async {
+  // في ملف database_service.dart قم بتحديث الدالة لتصبح هكذا:
+  Future<void> replaceAllEntries(String userId, List<EntryModel> cloudEntries) async {
     final db = await database;
-    await db.transaction((txn) async {
-      await txn.delete(
-        _tableName,
-        where: 'userId = ? AND syncStatus = ?',
-        whereArgs: [userId, 0],
-      );
-      for (final entry in entries) {
+    
+    await db.transaction((txn) async {      
+      // 1. استخراج معرفات القيود القادمة من السحابة
+      final cloudIds = cloudEntries.map((e) => e.id).toList();
+      
+      // 2. إنشاء استعلام لحذف القيود المتزامنة محلياً والتي لم تعد موجودة في السحابة (تم حذفها من جهاز آخر)
+      if (cloudIds.isNotEmpty) {
+        final placeholders = List.filled(cloudIds.length, '?').join(',');
+        await txn.delete(
+          _tableName,
+          where: 'userId = ? AND syncStatus = 0 AND id NOT IN ($placeholders)',
+          whereArgs: [userId, ...cloudIds],
+        );
+      } else {
+        // إذا كانت السحابة فارغة تماماً، نحذف كل القيود المتزامنة القديمة
+        await txn.delete(_tableName, where: 'userId = ? AND syncStatus = 0', whereArgs: [userId]);
+      }
+
+      // 3. إضافة أو تحديث القيود القادمة من السحابة
+      for (final entry in cloudEntries) {
         await txn.insert(
           _tableName,
           {...entry.copyWith(syncStatus: 0).toMap(), 'userId': userId},
-          conflictAlgorithm: ConflictAlgorithm.replace,
+          conflictAlgorithm: ConflictAlgorithm.replace, 
         );
       }
     });

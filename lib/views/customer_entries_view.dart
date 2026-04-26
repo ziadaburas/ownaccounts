@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:printing/printing.dart';
+import '../controllers/dialog_helper.dart';
 import '../controllers/entries_controller.dart';
 import '../models/entry_model.dart';
 import '../services/pdf_service.dart';
@@ -19,13 +20,14 @@ class CustomerEntriesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final entriesController = Get.find<EntriesController>();
-    
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
+        backgroundColor:
+            isDark ? AppColors.darkBackground : AppColors.background,
         body: Obx(() {
           final entries = entriesController.getCustomerEntries(customerName);
 
@@ -43,39 +45,41 @@ class CustomerEntriesView extends StatelessWidget {
             children: [
               // ===== هيدر مشابه للرئيسية =====
               CustomAppBar(
-  // 1. زر الرجوع (بدلاً من القائمة)
-  onDrawerPressed: () => Get.back(),
-  drawerIcon: Icons.arrow_forward_ios_rounded,
-  drawerTooltip: 'رجوع',
+                // 1. زر الرجوع (بدلاً من القائمة)
+                onDrawerPressed: () => Get.back(),
+                drawerIcon: Icons.arrow_forward_ios_rounded,
+                drawerTooltip: 'رجوع',
 
-  // 2. صورة واسم العميل
-  profileWidget: Container(
-    color: Colors.white.withOpacity(0.2),
-    alignment: Alignment.center,
-    child: Text(
-      customerName.isNotEmpty ? customerName[0].toUpperCase() : '?',
-      style: const TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-  ),
-  welcomeText: customerName,
-  emailText: null, // لا يوجد بريد إلكتروني هنا
+                // 2. صورة واسم العميل
+                profileWidget: Container(
+                  color: Colors.white.withOpacity(0.2),
+                  alignment: Alignment.center,
+                  child: Text(
+                    customerName.isNotEmpty
+                        ? customerName[0].toUpperCase()
+                        : '?',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                welcomeText: customerName,
+                emailText: null, // لا يوجد بريد إلكتروني هنا
 
-  // 3. زر المشاركة (بدلاً من المزامنة)
-  actionIcon: Icons.share_rounded,
-  actionTooltip: 'مشاركة تقرير PDF',
-  onActionPressed: () => _shareCustomerPdf(entries, customerName),
-  isActionLoading: false,
+                // 3. زر المشاركة (بدلاً من المزامنة)
+                actionIcon: Icons.share_rounded,
+                actionTooltip: 'مشاركة تقرير PDF',
+                onActionPressed: () => _shareCustomerPdf(entries, customerName),
+                isActionLoading: false,
 
-  // 4. الرصيد
-  balanceHeader: BalanceHeader(
-    totalCredit: totalCredit,
-    totalDebit: totalDebit,
-  ),
-),
+                // 4. الرصيد
+                balanceHeader: BalanceHeader(
+                  totalCredit: totalCredit,
+                  totalDebit: totalDebit,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                 child: Row(
@@ -85,7 +89,9 @@ class CustomerEntriesView extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.darkTextPrimary : const Color(0xFF37474F),
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : const Color(0xFF37474F),
                       ),
                     ),
                   ],
@@ -99,13 +105,18 @@ class CustomerEntriesView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.receipt_long_rounded,
-                                size: 64, color: isDark ? Colors.grey.shade700 : Colors.grey.shade300),
+                                size: 64,
+                                color: isDark
+                                    ? Colors.grey.shade700
+                                    : Colors.grey.shade300),
                             const SizedBox(height: 12),
                             Text(
                               'لا توجد قيود لهذا العميل',
                               style: TextStyle(
                                 fontSize: 16,
-                                color: isDark ? AppColors.darkTextSecondary : Colors.grey.shade500,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : Colors.grey.shade500,
                               ),
                             ),
                           ],
@@ -116,9 +127,11 @@ class CustomerEntriesView extends StatelessWidget {
                         itemCount: entries.length,
                         itemBuilder: (context, index) {
                           return _buildEntryTile(
-                entriesController.entries[index],
-                index == 0 ?null : entriesController.entries[index-1],
-              );
+                            entries[index],
+                            index == 0
+                                ? null
+                                : entries[index - 1],
+                          );
                         },
                       ),
               ),
@@ -126,8 +139,8 @@ class CustomerEntriesView extends StatelessWidget {
           );
         }),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Get.to(
-              () => AddEntryView(presetCustomerName: customerName)),
+          onPressed: () =>
+              Get.to(() => AddEntryView(presetCustomerName: customerName)),
           backgroundColor: AppColors.primaryMedium,
           foregroundColor: Colors.white,
           child: const Icon(Icons.add_rounded),
@@ -136,29 +149,17 @@ class CustomerEntriesView extends StatelessWidget {
     );
   }
 
-  Future<void> _shareCustomerPdf(List<EntryModel> entries, String customerName) async {
+  Future<void> _shareCustomerPdf(
+      List<EntryModel> entries, String customerName) async {
     if (entries.isEmpty) {
-      Get.snackbar(
-        'تنبيه',
-        'لا توجد قيود لمشاركتها',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-      );
+      
+      showMsgDialog(message: 'لا توجد قيود لمشاركتها',type: MsgType.warning);
       return;
     }
 
     try {
-      Get.snackbar(
-        'جاري التحضير',
-        'يتم إنشاء تقرير PDF...',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.primaryDark,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        duration: const Duration(seconds: 2),
-      );
+    
+
 
       final pdfBytes = await PdfService.generateReport(
         entries: entries,
@@ -171,21 +172,12 @@ class CustomerEntriesView extends StatelessWidget {
         filename: 'حساباتي_${customerName}_${DateTime.now()}.pdf',
       );
     } catch (e) {
-      Get.snackbar(
-        'خطأ',
-        'فشل إنشاء التقرير: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-      );
+     
+      showMsgDialog(message:'فشل إنشاء التقرير: $e' ,type: MsgType.error);
     }
   }
- Widget _buildEntryTile(
-    EntryModel entry,
-    EntryModel? lastEntry
 
-  ) {
+  Widget _buildEntryTile(EntryModel entry, EntryModel? lastEntry) {
     final currentItem = entry;
     bool showDateHeader = false;
     final entriesController = Get.find<EntriesController>();
@@ -194,32 +186,26 @@ class CustomerEntriesView extends StatelessWidget {
       showDateHeader = true;
     } else {
       final previousItem = lastEntry;
-      if (currentItem.date.toString().split(" ").first != previousItem.date.toString().split(" ").first) {
+      if (currentItem.date.toString().split(" ").first !=
+          previousItem.date.toString().split(" ").first) {
         showDateHeader = true;
       }
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        if (showDateHeader)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-              child: Text(
-                currentItem.date.toString().split(" ").first,
-                textAlign: ui.TextAlign.left,
-                style:const TextStyle( fontWeight: FontWeight.bold),
-              ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+      if (showDateHeader)
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          child: Text(
+            currentItem.date.toString().split(" ").first,
+            textAlign: ui.TextAlign.left,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          CardEntryTile(
-            entry: entry,
-            onDelete: () => entriesController.confirmDelete(entry),
-            onTap: () => Get.to(() => AddEntryView(editEntry: entry))
-            )
-    
-      
-      ]
-    );
+        ),
+      CardEntryTile(
+          entry: entry,
+          onDelete: () => entriesController.confirmDelete(entry),
+          onTap: () => Get.to(() => AddEntryView(editEntry: entry)))
+    ]);
   }
- 
 }

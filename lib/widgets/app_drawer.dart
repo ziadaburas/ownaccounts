@@ -397,12 +397,13 @@ class AppDrawer extends StatelessWidget {
   }
 
   void _showLogoutConfirm(BuildContext context, AuthController authController) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showDialog(
       context: context,
       builder: (context) => Directionality(
         textDirection: ui.TextDirection.rtl,
         child: AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: isDark?AppColors.darkBackground: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Row(
             children: [
@@ -428,6 +429,7 @@ class AppDrawer extends StatelessWidget {
             'هل تريد تسجيل الخروج من حسابك؟',
             style: TextStyle(fontSize: 14, ),
           ),
+          
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -436,6 +438,7 @@ class AppDrawer extends StatelessWidget {
                 style: TextStyle(color: AppColors.mediumGray),
               ),
             ),
+           const SizedBox(width: 80,),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();

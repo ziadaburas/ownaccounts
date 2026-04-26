@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/dialog_helper.dart';
 import '/controllers/sync_controller.dart';
 import '../controllers/auth_controller.dart';
 import '../theme/app_theme.dart';
@@ -256,14 +257,8 @@ class LoginView extends GetView<AuthController> {
         });
       }
     } else if (controller.error.value.isNotEmpty) {
-      Get.snackbar(
-        'خطأ',
-        'فشل تسجيل الدخول: ${controller.error.value}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-      );
+      
+      showMsgDialog(message: 'فشل تسجيل الدخول: ${controller.error.value}',type: MsgType.error);
     }
   }
 }

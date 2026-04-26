@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hisabati/controllers/dialog_helper.dart';
 import '../models/entry_model.dart';
 import '../services/database_service.dart';
 import '../theme/app_theme.dart';
@@ -172,14 +173,8 @@ class EntriesController extends GetxController {
         if (userId != null) {
           deleteEntry(userId, entry.id);
           Get.back();
-          Get.snackbar(
-            'تم الحذف',
-            'تم حذف القيد بنجاح',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            duration: const Duration(seconds: 2),
-          );
+          
+          showMsgDialog(message: 'تم حذف القيد بنجاح',type: MsgType.success);
         }
       },
     );

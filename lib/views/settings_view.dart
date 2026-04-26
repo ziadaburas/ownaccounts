@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/dialog_helper.dart';
 import '../controllers/entries_controller.dart';
 import '../controllers/sync_controller.dart';
 import '../controllers/theme_controller.dart';
@@ -20,7 +21,8 @@ class SettingsView extends StatelessWidget {
     return Directionality(
       textDirection: ui.TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
+        backgroundColor:
+            isDark ? AppColors.darkBackground : AppColors.background,
         body: Column(
           children: [
             // Header
@@ -97,7 +99,8 @@ class SettingsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ===== بيانات المستخدم =====
-                    _buildSectionHeader('بيانات المستخدم', Icons.person_rounded, isDark),
+                    _buildSectionHeader(
+                        'بيانات المستخدم', Icons.person_rounded, isDark),
                     const SizedBox(height: 12),
                     Obx(() {
                       final user = authController.user.value;
@@ -120,23 +123,28 @@ class SettingsView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: AppColors.primaryLight.withOpacity(0.5),
+                                  color:
+                                      AppColors.primaryLight.withOpacity(0.5),
                                   width: 2,
                                 ),
                               ),
                               child: CircleAvatar(
                                 radius: 28,
-                                backgroundColor: AppColors.primaryMedium.withOpacity(0.15),
-                                backgroundImage: user?.photoUrl.isNotEmpty == true
-                                    ? NetworkImage(user!.photoUrl)
-                                    : null,
+                                backgroundColor:
+                                    AppColors.primaryMedium.withOpacity(0.15),
+                                backgroundImage:
+                                    user?.photoUrl.isNotEmpty == true
+                                        ? NetworkImage(user!.photoUrl)
+                                        : null,
                                 child: user?.photoUrl.isEmpty != false
                                     ? Text(
                                         user?.displayName.isNotEmpty == true
                                             ? user!.displayName[0].toUpperCase()
                                             : '?',
                                         style: TextStyle(
-                                          color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
+                                          color: isDark
+                                              ? AppColors.primaryLight
+                                              : AppColors.primaryDark,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 22,
                                         ),
@@ -154,7 +162,9 @@ class SettingsView extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.textPrimary,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -162,7 +172,9 @@ class SettingsView extends StatelessWidget {
                                     user?.email ?? '',
                                     style: TextStyle(
                                       fontSize: 13,
-                                      color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
+                                      color: isDark
+                                          ? AppColors.darkTextSecondary
+                                          : AppColors.mediumGray,
                                     ),
                                   ),
                                 ],
@@ -176,7 +188,8 @@ class SettingsView extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // ===== المظهر =====
-                    _buildSectionHeader('المظهر', Icons.palette_rounded, isDark),
+                    _buildSectionHeader(
+                        'المظهر', Icons.palette_rounded, isDark),
                     const SizedBox(height: 12),
                     Container(
                       width: double.infinity,
@@ -201,7 +214,9 @@ class SettingsView extends StatelessWidget {
                                 isDark,
                               ),
                               Divider(
-                                  color: isDark ? AppColors.darkDivider : AppColors.lightGray,
+                                  color: isDark
+                                      ? AppColors.darkDivider
+                                      : AppColors.lightGray,
                                   height: 1),
                               _buildThemeOption(
                                 context,
@@ -213,7 +228,9 @@ class SettingsView extends StatelessWidget {
                                 isDark,
                               ),
                               Divider(
-                                  color: isDark ? AppColors.darkDivider : AppColors.lightGray,
+                                  color: isDark
+                                      ? AppColors.darkDivider
+                                      : AppColors.lightGray,
                                   height: 1),
                               _buildThemeOption(
                                 context,
@@ -231,7 +248,8 @@ class SettingsView extends StatelessWidget {
                     const SizedBox(height: 24),
 
                     // ===== البيانات =====
-                    _buildSectionHeader('إدارة البيانات', Icons.storage_rounded, isDark),
+                    _buildSectionHeader(
+                        'إدارة البيانات', Icons.storage_rounded, isDark),
                     const SizedBox(height: 12),
                     Container(
                       width: double.infinity,
@@ -252,10 +270,13 @@ class SettingsView extends StatelessWidget {
                             subtitle: 'حذف جميع القيود المخزنة على الجهاز',
                             color: Colors.orange,
                             isDark: isDark,
-                            onTap: () => _confirmDeleteLocalData(context, isDark),
+                            onTap: () =>
+                                _confirmDeleteLocalData(context, isDark),
                           ),
                           Divider(
-                              color: isDark ? AppColors.darkDivider : AppColors.lightGray,
+                              color: isDark
+                                  ? AppColors.darkDivider
+                                  : AppColors.lightGray,
                               height: 1,
                               indent: 16,
                               endIndent: 16),
@@ -266,7 +287,8 @@ class SettingsView extends StatelessWidget {
                             subtitle: 'حذف جميع البيانات من Google Drive',
                             color: AppColors.error,
                             isDark: isDark,
-                            onTap: () => _confirmDeleteCloudData(context, isDark),
+                            onTap: () =>
+                                _confirmDeleteCloudData(context, isDark),
                           ),
                         ],
                       ),
@@ -308,7 +330,9 @@ class SettingsView extends StatelessWidget {
                         'حساباتي - الإصدار 1.0.0',
                         style: TextStyle(
                           fontSize: 12,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.mediumGray,
                         ),
                       ),
                     ),
@@ -376,7 +400,8 @@ class SettingsView extends StatelessWidget {
               ),
               child: Icon(
                 icon,
-                color: isSelected ? AppColors.primaryMedium : AppColors.mediumGray,
+                color:
+                    isSelected ? AppColors.primaryMedium : AppColors.mediumGray,
                 size: 20,
               ),
             ),
@@ -388,18 +413,25 @@ class SettingsView extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.w500,
                       fontSize: 14,
                       color: isSelected
-                          ? (isDark ? AppColors.primaryLight : AppColors.primaryDark)
-                          : (isDark ? AppColors.darkTextPrimary : AppColors.textPrimary),
+                          ? (isDark
+                              ? AppColors.primaryLight
+                              : AppColors.primaryDark)
+                          : (isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.textPrimary),
                     ),
                   ),
                   Text(
                     subtitle,
                     style: TextStyle(
                       fontSize: 11,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.mediumGray,
                     ),
                   ),
                 ],
@@ -413,7 +445,8 @@ class SettingsView extends StatelessWidget {
                   color: AppColors.primaryMedium,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check_rounded, color: Colors.white, size: 14),
+                child: const Icon(Icons.check_rounded,
+                    color: Colors.white, size: 14),
               )
             else
               Container(
@@ -467,21 +500,26 @@ class SettingsView extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.textPrimary,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: TextStyle(
                       fontSize: 11,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.mediumGray,
                     ),
                   ),
                 ],
               ),
             ),
             Icon(Icons.chevron_left_rounded,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
+                color:
+                    isDark ? AppColors.darkTextSecondary : AppColors.mediumGray,
                 size: 22),
           ],
         ),
@@ -496,7 +534,8 @@ class SettingsView extends StatelessWidget {
         textDirection: ui.TextDirection.rtl,
         child: AlertDialog(
           backgroundColor: isDark ? AppColors.darkCard : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Row(
             children: [
               Container(
@@ -532,7 +571,9 @@ class SettingsView extends StatelessWidget {
               child: Text(
                 'إلغاء',
                 style: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray),
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.mediumGray),
               ),
             ),
             ElevatedButton(
@@ -561,7 +602,8 @@ class SettingsView extends StatelessWidget {
         textDirection: ui.TextDirection.rtl,
         child: AlertDialog(
           backgroundColor: isDark ? AppColors.darkCard : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Row(
             children: [
               Container(
@@ -599,7 +641,9 @@ class SettingsView extends StatelessWidget {
               child: Text(
                 'إلغاء',
                 style: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray),
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.mediumGray),
               ),
             ),
             ElevatedButton(
@@ -628,7 +672,8 @@ class SettingsView extends StatelessWidget {
         textDirection: ui.TextDirection.rtl,
         child: AlertDialog(
           backgroundColor: isDark ? AppColors.darkCard : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Row(
             children: [
               Container(
@@ -664,7 +709,9 @@ class SettingsView extends StatelessWidget {
               child: Text(
                 'إلغاء',
                 style: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.mediumGray),
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.mediumGray),
               ),
             ),
             ElevatedButton(
@@ -698,24 +745,10 @@ class SettingsView extends StatelessWidget {
       final entriesController = Get.find<EntriesController>();
       await entriesController.loadEntries(userId);
 
-      Get.snackbar(
-        'تم الحذف',
-        'تم حذف جميع البيانات المحلية بنجاح',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.success,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-        duration: const Duration(seconds: 3),
-      );
+      showMsgDialog(
+          message: 'تم حذف جميع البيانات المحلية بنجاح', type: MsgType.success);
     } catch (e) {
-      Get.snackbar(
-        'خطأ',
-        'فشل حذف البيانات: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-      );
+      showMsgDialog(message: 'فشل حذف البيانات: $e', type: MsgType.error);
     }
   }
 
@@ -725,34 +758,15 @@ class SettingsView extends StatelessWidget {
       final success = await syncController.driveService.deleteAllData();
 
       if (success) {
-        Get.snackbar(
-          'تم الحذف',
-          'تم حذف جميع البيانات السحابية بنجاح',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.success,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(12),
-          duration: const Duration(seconds: 3),
-        );
+        showMsgDialog(
+            message: 'تم حذف جميع البيانات السحابية بنجاح',
+            type: MsgType.success);
       } else {
-        Get.snackbar(
-          'خطأ',
-          'فشل حذف البيانات السحابية',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.error,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(12),
-        );
+        showMsgDialog(
+            message: 'فشل حذف البيانات السحابية', type: MsgType.error);
       }
     } catch (e) {
-      Get.snackbar(
-        'خطأ',
-        'فشل حذف البيانات: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-      );
+      showMsgDialog(message: 'فشل حذف البيانات: $e', type: MsgType.error);
     }
   }
 }

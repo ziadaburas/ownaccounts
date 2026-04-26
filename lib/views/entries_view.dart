@@ -46,7 +46,7 @@ class EntriesView extends StatelessWidget {
             }
           },
           child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+            padding: const EdgeInsets.fromLTRB(16, 1, 16, 100),
             itemCount: entriesController.entries.length,
             itemBuilder: (context, index) {
               return _buildEntryTile(
@@ -63,7 +63,7 @@ class EntriesView extends StatelessWidget {
   Widget _buildEmptyState() {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             width: 90,

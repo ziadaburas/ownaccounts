@@ -25,7 +25,7 @@ class HomeView extends StatelessWidget {
     final entriesController = Get.find<EntriesController>();
     final syncController = Get.find<SyncController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return WillPopScope(
       onWillPop: () async {
         final shouldExit = await _showExitConfirmDialog(context);
@@ -37,81 +37,84 @@ class HomeView extends StatelessWidget {
       child: Directionality(
         textDirection: ui.TextDirection.rtl,
         child: Obx(() => Scaffold(
-          backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
-          drawer: AppDrawer(
-            currentIndex: homeController.currentTabIndex.value,
-            onItemSelected: homeController.changeTab,
-          ),
-          body: Builder(
-            builder: (ctx) {
-              return Column(
-                children: [
-                  //_buildAppBar(context, homeController, authController, entriesController),
-                  // تأكد من استدعاء الكنترولرز هنا
-              
-              Obx(() {
-              final user = authController.user.value;
-              final isSyncingData = syncController.isSyncing.value;
-              
-                return CustomAppBar(
-  // القائمة
-  onDrawerPressed: () => Scaffold.of(ctx).openDrawer(),
-  drawerIcon: Icons.menu_rounded,
-  drawerTooltip: 'افتح القائمة',
+              backgroundColor:
+                  isDark ? AppColors.darkBackground : AppColors.background,
+              drawer: AppDrawer(
+                currentIndex: homeController.currentTabIndex.value,
+                onItemSelected: homeController.changeTab,
+              ),
+              body: Builder(builder: (ctx) {
+                return Column(
+                  children: [
+                    //_buildAppBar(context, homeController, authController, entriesController),
+                    // تأكد من استدعاء الكنترولرز هنا
 
-  // المستخدم
-  profileWidget: user?.photoUrl.isNotEmpty == true
-      ? Image.network(user!.photoUrl, fit: BoxFit.cover)
-      : Container(
-          color: Colors.white.withOpacity(0.15),
-          alignment: Alignment.center,
-          child: Text(
-            user?.displayName.isNotEmpty == true
-                ? user!.displayName[0].toUpperCase()
-                : '?',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-        ),
-  welcomeText: 'مرحباً، ${user?.displayName ?? 'المستخدم'}',
-  emailText: user?.email,
+                    Obx(() {
+                      final user = authController.user.value;
+                      final isSyncingData = syncController.isSyncing.value;
 
-  // الإجراء (تم تغيير المسميات هنا لتعمل مع التعديل الجديد)
-  actionIcon: Icons.cloud_sync_rounded,
-  actionTooltip: 'مزامنة البيانات',
-  isActionLoading: isSyncingData, // بدلاً من isSyncing
-  onActionPressed: () {          // بدلاً من onSyncPressed
-    final userId = user?.uid;
-    if (userId != null) {
-      authController.refreshToken().then((_) {
-        syncController.syncNow(userId);
-      });
-    }
-  },
+                      return CustomAppBar(
+                        // القائمة
+                        onDrawerPressed: () => Scaffold.of(ctx).openDrawer(),
+                        drawerIcon: Icons.menu_rounded,
+                        drawerTooltip: 'افتح القائمة',
 
-  // الرصيد
-  balanceHeader: BalanceHeader(
-    totalCredit: entriesController.totalCredit,
-    totalDebit: entriesController.totalDebit,
-    
-  ),
-);
+                        // المستخدم
+                        profileWidget: user?.photoUrl.isNotEmpty == true
+                            ? Image.network(user!.photoUrl, fit: BoxFit.cover)
+                            : Container(
+                                color: Colors.white.withOpacity(0.15),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  user?.displayName.isNotEmpty == true
+                                      ? user!.displayName[0].toUpperCase()
+                                      : '?',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                        welcomeText:
+                            'مرحباً، ${user?.displayName ?? 'المستخدم'}',
+                        emailText: user?.email,
+
+                        // الإجراء (تم تغيير المسميات هنا لتعمل مع التعديل الجديد)
+                        actionIcon: Icons.cloud_sync_rounded,
+                        actionTooltip: 'مزامنة البيانات',
+                        isActionLoading: isSyncingData, // بدلاً من isSyncing
+                        onActionPressed: () {
+                          // بدلاً من onSyncPressed
+                          final userId = user?.uid;
+                          if (userId != null) {
+                            authController.refreshToken().then((_) {
+                              syncController.syncNow(userId);
+                            });
+                          }
+                        },
+
+                        // الرصيد
+                        balanceHeader: BalanceHeader(
+                          totalCredit: entriesController.totalCredit,
+                          totalDebit: entriesController.totalDebit,
+                        ),
+                      );
+                    }),
+                    const SyncStatusBar(),
+                    
+                    Expanded(
+                      child: _buildTabContent(
+                          homeController.currentTabIndex.value),
+                    ),
+                  ],
+                );
               }),
-                  const SyncStatusBar(),
-                  Expanded(
-                    child: _buildTabContent(homeController.currentTabIndex.value),
-                  ),
-                ],
-              );
-            }
-          ),
-          bottomNavigationBar: _buildBottomNav(context, homeController),
-          floatingActionButton: _buildFAB(homeController),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        )),
+              bottomNavigationBar: _buildBottomNav(context, homeController),
+              floatingActionButton: _buildFAB(homeController),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerDocked,
+            )),
       ),
     );
   }
@@ -120,19 +123,17 @@ class HomeView extends StatelessWidget {
     switch (index) {
       case 0:
       case 1:
-        return  EntriesView();
+        return EntriesView();
       case 3:
-        return  CustomersView();
+        return CustomersView();
       default:
-        return  EntriesView();
+        return EntriesView();
     }
   }
 
- 
-
   Widget _buildBottomNav(BuildContext context, HomeController homeController) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     // فقط القيود والعملاء
     final tabs = [
       {'icon': Icons.receipt_long_rounded, 'label': 'القيود', 'index': 1},
@@ -147,7 +148,8 @@ class HomeView extends StatelessWidget {
             color: isDark ? const Color(0xFF1A1A1A) : AppColors.primaryDark,
             boxShadow: [
               BoxShadow(
-                color: (isDark ? Colors.black : AppColors.primaryDark).withOpacity(0.3),
+                color: (isDark ? Colors.black : AppColors.primaryDark)
+                    .withOpacity(0.3),
                 blurRadius: 16,
                 offset: const Offset(0, -4),
               ),
@@ -186,7 +188,8 @@ class HomeView extends StatelessWidget {
     });
   }
 
-  Widget _buildNavItem(IconData icon, String label, bool isActive, VoidCallback onTap) {
+  Widget _buildNavItem(
+      IconData icon, String label, bool isActive, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -196,14 +199,18 @@ class HomeView extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: isActive ? AppColors.primaryLight : AppColors.bottomNavInactive,
+              color: isActive
+                  ? AppColors.primaryLight
+                  : AppColors.bottomNavInactive,
               size: 22,
             ),
             const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
-                color: isActive ? AppColors.primaryLight : AppColors.bottomNavInactive,
+                color: isActive
+                    ? AppColors.primaryLight
+                    : AppColors.bottomNavInactive,
                 fontSize: 10,
                 fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
               ),
@@ -239,7 +246,7 @@ class HomeView extends StatelessWidget {
         shape: const CircleBorder(),
         child: InkWell(
           customBorder: const CircleBorder(),
-          onTap: () => Get.to(() =>  AddEntryView()),
+          onTap: () => Get.to(() => AddEntryView()),
           child: const Center(
             child: Icon(Icons.add_rounded, color: Colors.white, size: 28),
           ),
@@ -256,7 +263,8 @@ class HomeView extends StatelessWidget {
         textDirection: ui.TextDirection.rtl,
         child: AlertDialog(
           backgroundColor: isDark ? AppColors.darkCard : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Row(
             children: [
               Container(
@@ -265,7 +273,8 @@ class HomeView extends StatelessWidget {
                   color: AppColors.primaryDark.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.exit_to_app_rounded, color: AppColors.primaryDark, size: 22),
+                child: const Icon(Icons.exit_to_app_rounded,
+                    color: AppColors.primaryDark, size: 22),
               ),
               const SizedBox(width: 12),
               Text(
@@ -273,7 +282,9 @@ class HomeView extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.textPrimary,
                 ),
               ),
             ],
@@ -291,12 +302,14 @@ class HomeView extends StatelessWidget {
               child: const Text('إلغاء',
                   style: TextStyle(color: AppColors.mediumGray)),
             ),
+            const SizedBox(width: 80,),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.error,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
               ),
               child: const Text('خروج', style: TextStyle()),
             ),

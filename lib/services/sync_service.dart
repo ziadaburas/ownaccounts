@@ -14,7 +14,7 @@ class SyncService {
   final ConnectivityService _connectivity;
 
   SyncService(this._db, this._drive, this._connectivity);
-  
+
   Future<SyncResult> syncNow(String userId) async {
     if (!_connectivity.isOnline) {
       return SyncResult(
@@ -27,7 +27,7 @@ class SyncService {
       // 1. جلب التغييرات المحلية المعلقة والمحذوفة
       final pendingEntries = await _db.getPendingEntries(userId);
       final deletedEntries = await _db.getDeletedEntries(userId);
-      
+
       // جلب كل القيود لمعرفة ما إذا كان التطبيق "جديداً" (فارغاً)
       final allLocalEntries = await _db.getEntries(userId);
       final isAppCompletelyNew = allLocalEntries.isEmpty;
@@ -44,10 +44,12 @@ class SyncService {
             for (final entry in allLocalEntries) {
               await _db.markAsSynced(userId, entry.id);
             }
-            return SyncResult(state: SyncState.synced, message: 'تم رفع النسخة المحلية');
+            return SyncResult(
+                state: SyncState.synced, message: 'تم رفع النسخة المحلية');
           }
         }
-        return SyncResult(state: SyncState.error, message: 'تعذر الاتصال بالسحابة');
+        return SyncResult(
+            state: SyncState.error, message: 'تعذر الاتصال بالسحابة');
       }
 
       // --- الحالة الأولى: التطبيق جديد تماماً (قاعدة البيانات فارغة) ---
@@ -56,39 +58,54 @@ class SyncService {
           // يوجد نسخة في السحابة -> استرجاع فوري
           await _db.replaceAllEntries(userId, cloudEntriesResult);
           try {
-          if (Get.isRegistered<EntriesController>()) {
-            // نستخدم await لضمان تحميل البيانات قبل إخفاء شريط المزامنة
-            await Get.find<EntriesController>().loadEntries(userId);
+            if (Get.isRegistered<EntriesController>()) {
+              // نستخدم await لضمان تحميل البيانات قبل إخفاء شريط المزامنة
+              await Get.find<EntriesController>().loadEntries(userId);
+            }
+          } catch (e) {
+            if (kDebugMode)
+              debugPrint('Error reloading entries after sync: $e');
           }
-        } catch (e) {
-          if (kDebugMode) debugPrint('Error reloading entries after sync: $e');
-        }
           return SyncResult(
-            state: SyncState.synced, 
+            state: SyncState.synced,
             message: 'تم استرجاع بياناتك من السحابة بنجاح',
             entriesCount: cloudEntriesResult.length,
           );
         } else {
           // لا يوجد بيانات في السحابة والتطبيق جديد
-          return SyncResult(state: SyncState.synced, message: 'تم تجهيز السحابة لحسابك');
+          return SyncResult(
+              state: SyncState.synced, message: 'تم تجهيز السحابة لحسابك');
         }
       }
 
       // --- الحالة الثانية: لا توجد أي تغييرات محلية (لا يوجد إضافة/تعديل/حذف) ---
+      // في ملف sync_service.dart - داخل الحالة الثانية، قم بتعديلها لتصبح:
+
+// --- الحالة الثانية: لا توجد أي تغييرات محلية (لا يوجد إضافة/تعديل/حذف) ---
       if (pendingEntries.isEmpty && deletedEntries.isEmpty) {
-        // بما أنه لا يوجد تغييرات محلية، نحدث القاعدة المحلية بما في السحابة فقط (لتوفير الإنترنت)
         if (cloudEntriesResult.isNotEmpty) {
-           await _db.replaceAllEntries(userId, cloudEntriesResult);
+          await _db.replaceAllEntries(userId, cloudEntriesResult);
+          return SyncResult(
+            state: SyncState.synced,
+            message: 'بياناتك محدثة',
+            entriesCount: cloudEntriesResult.length,
+          );
+        } else if (allLocalEntries.isNotEmpty) {
+          // 🚨 تدارك الكارثة: السحابة فارغة ولكن لدينا بيانات محلية متزامنة سابقاً!
+          // نرفع كل البيانات المحلية لإعادة بناء ملف السحابة المفقود
+          final success = await _drive.uploadEntries(allLocalEntries);
+          if (success) {
+            return SyncResult(
+                state: SyncState.synced,
+                message: 'تم إعادة بناء بيانات السحابة');
+          } else {
+            return SyncResult(
+                state: SyncState.error, message: 'فشل استعادة السحابة');
+          }
         }
-        return SyncResult(
-          state: SyncState.synced, 
-          message: 'بياناتك محدثة',
-          entriesCount: cloudEntriesResult.length,
-        );
       }
 
-      // --- الحالة الثالثة: يوجد تغييرات محلية (نحتاج لدمج ورفع) ---
-      
+
       // 3. دمج البيانات
       final mergedEntries = _mergeEntries(
         cloudEntriesResult,
@@ -119,7 +136,6 @@ class SyncService {
         message: 'تمت المزامنة بنجاح',
         entriesCount: mergedEntries.length,
       );
-
     } catch (e) {
       if (kDebugMode) debugPrint('Sync error: $e');
       return SyncResult(
@@ -145,7 +161,8 @@ class SyncService {
 
     for (final entry in pending) {
       if (!deletedIds.contains(entry.id)) {
-        merged[entry.id] = entry.copyWith(syncStatus: 1); // ✅ تم التعديل هنا لتصبح 1 (مزامنة) لأننا سنرفعها
+        merged[entry.id] = entry.copyWith(
+            syncStatus: 1); // ✅ تم التعديل هنا لتصبح 1 (مزامنة) لأننا سنرفعها
       }
     }
 

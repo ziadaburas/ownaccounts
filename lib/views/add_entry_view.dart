@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../controllers/dialog_helper.dart';
 import '../theme/app_theme.dart';
 import '../controllers/add_entry_controller.dart';
 import '../models/entry_model.dart';
@@ -214,7 +215,7 @@ class AddEntryView extends StatelessWidget {
                       const SizedBox(height: 8),
                       CustomSuggestionField(
                         controller: controller.customerController,
-                        hintText: 'أدخل اسم العميل (اختياري)',
+                        hintText: 'أدخل اسم العميل ',
                         prefixIcon: Icons.person_rounded,
                         suggestions: controller
                             .customerSuggestions, // تمرير القائمة الأصلية فقط
@@ -244,7 +245,7 @@ class AddEntryView extends StatelessWidget {
                       const SizedBox(height: 8),
                       CustomSuggestionField(
                         controller: controller.noteController,
-                        hintText: 'أدخل ملاحظة (اختياري)',
+                        hintText: 'أدخل ملاحظة',
                         prefixIcon: Icons.note_rounded,
                         suggestions: controller.noteSuggestions,
                         isDark: isDark,
@@ -264,15 +265,10 @@ class AddEntryView extends StatelessWidget {
                                           await controller.saveEntry();
                                       if (success) {
                                         Get.back();
-                                        Get.snackbar(
-                                          'تم',
-                                          controller.isEditing
+                                        
+                                        showMsgDialog(message:controller.isEditing
                                               ? 'تم تحديث القيد'
-                                              : 'تم إضافة القيد',
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: AppColors.success,
-                                          colorText: Colors.white,
-                                        );
+                                              : 'تم إضافة القيد' ,type: MsgType.success);
                                       }
                                     },
                               style: ElevatedButton.styleFrom(

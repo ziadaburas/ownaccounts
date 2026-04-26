@@ -48,12 +48,7 @@ class CustomEntryTile extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border(
-              right: BorderSide(
-                color: mainColor,
-                width: 4,
-              ),
-            ),
+           
           ),
           child: Row(
             children: [
@@ -153,12 +148,12 @@ class CardEntryTile extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border(
-              right: BorderSide(
-                color: mainColor,
-                width: 4,
-              ),
-            ),
+            // border: Border(
+            //   right: BorderSide(
+            //     color: mainColor,
+            //     width: 4,
+            //   ),
+            // ),
           ),
           child: Row(
             children: [
@@ -189,25 +184,27 @@ class CardEntryTile extends StatelessWidget {
                           entry.customerName.isNotEmpty
                               ? entry.customerName
                               : 'بدون اسم',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
-                            color: mainColor,
+                            // color: mainColor,
                           ),
                         ),
+                        const SizedBox(width: 10),
+                        BackColorText(
+                          text: entry.isCredit ? 'لي' : 'عليا',
+                          color: mainColor,
+                          fontSize: 10,
+                        ),
+                        const Spacer(),
                         Text(
-                          entry.isCredit ? 'لي' : 'عليا',
+                          '${entry.isCredit ? '+' : '-'}${entry.amount}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             color: mainColor,
                           ),
                         ),
-                        BackColorText(
-                          text: '${entry.isCredit ? '+' : '-'}${entry.amount}',
-                          color: mainColor,
-                        ),
-                        
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -239,6 +236,16 @@ class CardEntryTile extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                          Icon(
+                            // إذا كانت الحالة 0 فهي متزامنة، غير ذلك (1 أو 2) فهي معلقة
+                            entry.syncStatus == 0
+                                ? Icons.cloud_done_rounded
+                                : Icons.cloud_off_rounded,
+                            size: 16,
+                            color: entry.syncStatus == 0
+                                ? Colors.green
+                                : Colors.orange,
+                          )
                         ],
                       ],
                     ),
@@ -270,10 +277,10 @@ class BackColorText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Text(
         text,

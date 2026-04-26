@@ -288,12 +288,7 @@ class CustomersView extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border(
-              right: BorderSide(
-                color: balanceColor,
-                width: 4,
-              ),
-            ),
+           
           ),
           child: Row(
             children: [

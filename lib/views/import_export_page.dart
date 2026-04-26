@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/dialog_helper.dart';
 import '../controllers/entries_controller.dart';
 import '../controllers/import_export_controller.dart';
 import '../theme/app_theme.dart';
@@ -608,14 +609,8 @@ class ImportExportPage extends StatelessWidget {
       BuildContext context, ImportExportController controller) async {
     final entries = controller.filteredEntries;
     if (entries.isEmpty) {
-      Get.snackbar(
-        'تنبيه',
-        'لا توجد قيود مطابقة للفلتر المحدد',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-      );
+      
+      showMsgDialog(message:'لا توجد قيود مطابقة للفلتر المحدد' ,type: MsgType.warning);
       return;
     }
 
@@ -623,40 +618,21 @@ class ImportExportPage extends StatelessWidget {
     try {
       final bytes = await controller.generateExcelBytes();
       if (bytes == null) {
-        Get.snackbar(
-          'خطأ',
-          'فشل إنشاء ملف Excel',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.error,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(12),
-        );
+        
+        showMsgDialog(message:  'فشل إنشاء ملف Excel',type: MsgType.error);
         return;
       }
 
       if (kIsWeb) {
         _downloadFileWeb(bytes, controller.exportFileName);
-        Get.snackbar(
-          'تم التصدير بنجاح',
-          'تم تحميل ملف Excel (${entries.length} قيد)',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.success,
-          colorText: Colors.white,
-          duration: const Duration(seconds: 4),
-          margin: const EdgeInsets.all(12),
-        );
+        
+        showMsgDialog(message: 'تم تحميل ملف Excel (${entries.length} قيد)',type: MsgType.success);
       } else {
         await controller.exportToExcelMobile();
       }
     } catch (e) {
-      Get.snackbar(
-        'خطأ',
-        'حدث خطأ: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.error,
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(12),
-      );
+     
+      showMsgDialog(message: 'حدث خطأ: $e',type: MsgType.error);
     } finally {
       controller.isExporting.value = false;
     }

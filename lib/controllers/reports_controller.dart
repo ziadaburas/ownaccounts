@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:printing/printing.dart';
 import '../models/entry_model.dart';
 import '../services/pdf_service.dart';
+import 'dialog_helper.dart';
 import 'entries_controller.dart';
 
 enum ReportType { all, customer, period, customerPeriod }
@@ -69,13 +69,8 @@ class ReportsController extends GetxController {
     try {
       final entries = filteredEntries;
       if (entries.isEmpty) {
-        Get.snackbar(
-          'تنبيه',
-          'لا توجد قيود مطابقة للفلتر المحدد',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        
+        showMsgDialog(message: 'لا توجد قيود مطابقة للفلتر المحدد',type: MsgType.warning);
         isGenerating.value = false;
         return;
       }
@@ -95,13 +90,8 @@ class ReportsController extends GetxController {
         name: 'تقرير_حساباتي',
       );
     } catch (e) {
-      Get.snackbar(
-        'خطأ',
-        'فشل توليد التقرير: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      
+      showMsgDialog(message:'فشل توليد التقرير: $e' ,type: MsgType.error);
     }
     isGenerating.value = false;
   }
